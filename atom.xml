@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://lemonMeow.github.io</id>
     <title>LemonMeow</title>
-    <updated>2020-09-10T05:53:23.856Z</updated>
+    <updated>2020-09-10T06:05:18.125Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://lemonMeow.github.io"/>
     <link rel="self" href="https://lemonMeow.github.io/atom.xml"/>
@@ -10,35 +10,549 @@
     <icon>https://lemonMeow.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, LemonMeow</rights>
     <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://lemonMeow.github.io/post/hello-gridea/</id>
-        <link href="https://lemonMeow.github.io/post/hello-gridea/">
+        <title type="html"><![CDATA[OC-Runtime]]></title>
+        <id>https://lemonMeow.github.io/post/oc-runtime/</id>
+        <link href="https://lemonMeow.github.io/post/oc-runtime/">
         </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+        <updated>2020-09-10T06:00:35.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="如何理解runtime">如何理解RunTime？</h1>
+<p>代码如何让机器运行启动展示我们想要的结果，实质是类似OC等高级语言通过和汇编机器语言编译成二进制数据对机器进行相应操作，这里我们有一个概念编译，先举个例子--OC中如果声明一个方法-(void)run;即使没有真正实现这个方法情况下，编译时是不会报错的，而在真正运行时才会由于找不到该方法的实现而crash，这就是OC的RunTime做的事情。</p>
+<blockquote>
+<p>RunTime围绕以下几点展开</p>
+</blockquote>
+<ul>
+<li>对象与方法的本质</li>
+<li>消息发送</li>
+<li>动态方法解析</li>
+<li>消息转发</li>
+</ul>
+<blockquote>
+<p>OC代码与RunTime进行交互的途径?</p>
+</blockquote>
+<ol>
+<li>runtime API;</li>
+<li>NSObject API;</li>
+<li>OC方法，例如@selector(run);</li>
+</ol>
+<blockquote>
+<p>OC方法调用 / 消息机制 是什么？</p>
+</blockquote>
+<ul>
+<li>给方法调用者发送消息，<code>objc_msgSend(id, sel)</code>底层实现，其中包含两个概念
+<ul>
+<li>消息接收者（receiver）即 <code>id</code>：（实例对象、类对象）</li>
+<li>消息名称 即 <code>sel</code>（<code>@selecter(test)</code> / <code>sel_registerName(&quot;test&quot;)</code>）: test</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><code>objc_msgSend()</code>执行流程（方法查找流程）可以大致分为3大阶段</p>
+</blockquote>
+<ul>
+<li>消息发送</li>
+<li>动态方法解析</li>
+<li>消息转发</li>
+</ul>
+<h1 id="一-对象与方法的本质">一. 对象与方法的本质</h1>
+<blockquote>
+<p>oc代码 转成c++ 代码命令：clang -rewrite-objc xxxx.m -o xxxx.cpp</p>
+</blockquote>
+<pre><code class="language-objc">// OC
+Person *person = [[Person alloc] init];
+
+// C++
+BXPerson *person = ((BXPerson *(*)(id, SEL))(void *)objc_msgSend)((id)((BXPerson *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass(&quot;BXPerson&quot;), sel_registerName(&quot;alloc&quot;)), sel_registerName(&quot;init&quot;));
+
+// C++ 去掉强制类型转换(简洁版)
+BXPerson *person = (objc_msgSend)((objc_msgSend)(objc_getClass(&quot;BXPerson&quot;), sel_registerName(&quot;alloc&quot;)), sel_registerName(&quot;init&quot;));
+
+// OC 
+[person run];
+
+// C++ 简洁版
+(objc_msgSend)(person, sel_registerName(&quot;run&quot;));
+
+// 其中 BXPerson 对象的定义
+#ifndef _REWRITER_typedef_BXPerson
+#define _REWRITER_typedef_BXPerson
+typedef struct objc_object BXPerson;
+typedef struct {} _objc_exc_BXPerson;
+#endif
+
+struct BXPerson_IMPL {
+	struct NSObject_IMPL NSObject_IVARS;
+};
+</code></pre>
+<ul>
+<li>(Person <em>(</em>)(id, SEL)) ：强制类型转换，可以看出，Person这个类的结构体包含的内容有：id self 消息接受者；sel _cmd 消息；</li>
+<li>objc_msgSend()</li>
+<li>objc_getClass(&quot;Person&quot;)</li>
+<li>sel_registerName(&quot;alloc&quot;)</li>
+<li>sel_registerName(&quot;init&quot;)</li>
+</ul>
+<h2 id="1-对象的本质结构体">1. 对象的本质：结构体</h2>
+<p>从上面代码，可以看出对象的本质就是结构体</p>
+<h2 id="2-方法的本质发送消息">2. 方法的本质：发送消息</h2>
+<blockquote>
+<p>objc_msgSend(person, sel_registerName(&quot;run&quot;));<br></p>
+</blockquote>
+<ul>
+<li>消息的组成：<br>
+<ul>
+<li>person - 消息接受者</li>
+<li>sel_registerName(&quot;run&quot;) - 方法编号，实质就是name</li>
+</ul>
+</li>
+<li>任何方法的调用底层函数（伪代码）：
+<ul>
+<li>void runIMP(id self, sel _cmd) {}，其中：</li>
+<li>id self 就是方法的接受者；</li>
+<li>sel _cmd 就是方法的编号；</li>
+<li>imp是函数实现的指针；</li>
+</ul>
+</li>
+<li><mark>怎样通过sel找到imp？</mark></li>
+</ul>
+<h1 id="二消息发送">二.消息发送</h1>
+<h2 id="1类方法与实例方法">1.类方法与实例方法</h2>
+<blockquote>
+<p>sel_registerName(&quot;run&quot;)  &lt;==&gt; @selector(run) <br></p>
+</blockquote>
+<ul>
+<li>实例方法调用：objc_msgSend(person, sel_registerName(&quot;run&quot;));</li>
+<li>类方法的调用：objc_msgSend(objc_getClass(&quot;BXPerson&quot;), sel_registerName(&quot;alloc&quot;))</li>
+</ul>
+<h2 id="总结">总结：</h2>
+<ul>
+<li>实例方法存在于该类的方法列表里</li>
+<li>类方法存在于元类的方法列表里，且在元类里以实例方法的形式存在</li>
+</ul>
+<h2 id="2-方法查找-objc_msgsend">2. 方法查找 objc_msgSend</h2>
+<h3 id="1objc_msgsend-为什么用汇编写">1.objc_msgSend 为什么用汇编写？</h3>
+<ul>
+<li>C语言（静态函数，编译时）不可能通过写一个函数来保留未知的参数跳转到任意指针，即无法完成运行时机制</li>
+<li>汇编速度快，并且可通过寄存器进行存储等操作</li>
+</ul>
+<h3 id="2oc中方法一步一步向机器能识别的代码走下去也就是方法查找流程">2.OC中方法一步一步向机器能识别的代码走下去，也就是方法查找流程</h3>
+<p>有两种消息查找方式：</p>
+<ul>
+<li>从“<mark>相应的缓存</mark>”中通过汇编 -- 快速</li>
+<li>C/C++/汇编 共同查找，是一个复杂的过程 -- 慢速；找到之后再存入缓存中（哈希表）一遍下次进行快速查找</li>
+</ul>
+<blockquote>
+<p>相应的缓存:类(objc_class)中有一个参数cache_t cache，用来存储sel &amp; imp 方法列表 即 哈希表，通过哈希表查找是快速的</p>
+</blockquote>
+<h3 id="3objc_msgsend-源码解析">3.objc_msgSend 源码解析</h3>
+<p>objc_msgSend 源码是汇编代码<br>
+入口：objc-msg-arm64.s</p>
+<pre><code>// 伪代码
+// 1. m.304 
+ENTRY _objc_msgSend
+
+// 2. calls imp or objc_msgSend_uncached
+CacheLookup NORMAL
+
+// 3. not-hit bucket
+CheckMiss
+
+// 4
+__objc_msgSend_uncached
+
+// 5.
+MethodTableLookup
+
+// 6. 从这步开始走到c/c++部分
+__class_lookupMethodAndLoadCache3
+
+// 结束 m.347
+END_ENTRY _objc_msgSend
+</code></pre>
+<ul>
+<li>汇编部分
+<ul>
+<li>大概就是从哈希表里直接查找，找到就返回imp，找不到就去和C中递归查找，并且找到后放入哈希表中缓存，以便下次快速查找</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-c++">// 1. 
+IMP _class_lookupMethodAndLoadCache3(id obj, SEL sel, Class cls)
+// 2.
+IMP lookUpImpOrForward(Class cls, SEL sel, id inst, 
+                       bool initialize, bool cache, bool resolver)
+</code></pre>
+<ul>
+<li>C、C++
+<ul>
+<li>lookUpImpOrForward</li>
+<li>realizeClass(cls);</li>
+<li>_class_initialize (_class_getNonMetaClass(cls, inst));</li>
+<li>以下是C递归查找，当前类 -&gt; 父类 -&gt; 元类 -&gt; ... -&gt;NSObject</li>
+<li>getMethodNoSuper_nolock(cls, sel);</li>
+<li>log_and_fill_cache(cls, meth-&gt;imp, sel, inst, cls);<br>
+<br><br>
+<br><br>
+以上是方法查找过程，且最终找到了imp</li>
+</ul>
+</li>
+</ul>
+<h1 id="三-动态方法解析-_class_resolvemethod">三. 动态方法解析 - _class_resolveMethod</h1>
+<blockquote>
+<p>&quot;No implementation found. Try method resolver once.&quot;<br><br>
+如果imp没有找到，此时要进行动态方法解析,且仅执行一次（标志位triedResolver）。</p>
+</blockquote>
+<pre><code>void _class_resolveMethod(Class cls, SEL sel, id inst)
+{
+    if (! cls-&gt;isMetaClass()) {
+        // try [cls resolveInstanceMethod:sel]
+        _class_resolveInstanceMethod(cls, sel, inst);
+    } 
+    // 元类，先走类方法解析
+    // 继续走类的实例方法解析
+    else {
+        // try [nonMetaClass resolveClassMethod:sel]
+        // and [cls resolveInstanceMethod:sel]
+        _class_resolveClassMethod(cls, sel, inst);
+        if (!lookUpImpOrNil(cls, sel, inst, 
+                            NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+        {
+            _class_resolveInstanceMethod(cls, sel, inst);
+        }
+    }
+}
+</code></pre>
+<p>_class_resolveMethod 源码解析：</p>
+<h2 id="1-method-resolution">1. Method resolution</h2>
+<ul>
+<li>1.判断 cls 非元类，走动态实例方法解析。<br>_class_resolveInstanceMethod &lt;==&gt; +(BOOL)resolveInstanceMethod:(SEL)sel;</li>
+<li>2.cls 是元类，走类方法解析。并且再走一步实例方法解析。<br>_class_resolveClassMethod &lt;==&gt; + (BOOL)resolveClassMethod:(SEL)sel; ==&gt;_class_resolveInstanceMethod</li>
+</ul>
+<blockquote>
+<p>可重写这两个方法以达到防止crash的情况。两个方法实现逻辑一致<br><br>
+我们如何收到这两个方法的调用？<br><br>
+BOOL (*msg)(Class, SEL, SEL) = (<strong>typeof</strong>(msg))objc_msgSend;<br><br>
+bool resolved = msg(_class_getNonMetaClass(cls, inst),<br>
+SEL_resolveClassMethod, sel);<br><br>
+实质就是在这两个方法内部，runtime会发送一个消息即这两个方法被调用。</p>
+</blockquote>
+<ul>
+<li>如果没有重写以上两个方法，runtime就会走下面一个流程，<mark>消息转发</mark></li>
+</ul>
+<h1 id="四-消息转发">四. 消息转发</h1>
+<blockquote>
+<p>// No implementation found, and method resolver didn't help.<br>   // Use forwarding.<br> 动态解析后没有实现以上两个方法则走消息转发机制</p>
+</blockquote>
+<blockquote>
+<p>imp = (IMP)_objc_msgForward_impcache;<br><br>
+消息转发是汇编调用，苹果闭源代码</p>
+</blockquote>
+<p>解决方案：(跨域请求声明)</p>
+<pre><code class="language-objc">// main.m
+#import &lt;Foundation/Foundation.h&gt;
+#import &quot;LGStudent.h&quot;
+#include &lt;objc/message.h&gt; // 看到这个斜杠我们就知道runtime不在runtime文件 在objc文件
+
+/***********************************************************************
+* instrumentObjcMessageSends
+**********************************************************************/
+// Define this everywhere even if it isn't used to simplify fork() safety code.
+// 该函数就是打印log
+extern void instrumentObjcMessageSends(BOOL);
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        instrumentObjcMessageSends(YES);
+        [LGPerson  walk];
+        instrumentObjcMessageSends(NO);
+    }
+    return 0;
+}
+</code></pre>
+<p>运行成功后，/private/tmp/msgSends-18316 该路径下回生成msgSends-xxx 方法列表，里面保存的是该项目的所有调用的方法&amp;顺序。由此我们可以重写一下方法，达到自定义功能，例如：<mark>crash收集，防止项目crash，埋点功能</mark> 等。aspect</p>
+<h2 id="1-method-fast-forwarding">1. Method Fast Forwarding</h2>
+<blockquote>
+<p>-(id)forwardingTargetForSelector:(SEL)aSelector <br><br>
+Runtimer 调用这个方法，给你一个把这个消息转发给其他对象的机会，只要这个方法返回的不是nil或者self，消息转发就会启动，返送的对象就是你返回的对象，否则就会继续走下面的方法 Normal Forwarding。此方法可以直接返回YES，则不会走下面两个方法。</p>
+</blockquote>
+<h2 id="2-method-normal-forwarding">2. Method Normal Forwarding</h2>
+<ul>
+<li>-(NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector <br> 方法签名：获取该函数的参数和返回值类型，如果该函数返回nil，runtime会发送-doesNorRecogniazeSelector:消息，程序挂掉。</li>
+<li>-(void)forwardInvocation:(NSInvocation *)anInvocation <br> 消息重定向转发：runtime会创建一个NSInvocation对象，并发送消息给目标对象。</li>
+</ul>
+<h1 id="扩展">扩展</h1>
+<ul>
+<li>如果在底层搜索不到对应的方法，尝试减少一个- 继续查找</li>
+</ul>
 ]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+        <content type="html"><![CDATA[<h1 id="如何理解runtime">如何理解RunTime？</h1>
+<p>代码如何让机器运行启动展示我们想要的结果，实质是类似OC等高级语言通过和汇编机器语言编译成二进制数据对机器进行相应操作，这里我们有一个概念编译，先举个例子--OC中如果声明一个方法-(void)run;即使没有真正实现这个方法情况下，编译时是不会报错的，而在真正运行时才会由于找不到该方法的实现而crash，这就是OC的RunTime做的事情。</p>
+<blockquote>
+<p>RunTime围绕以下几点展开</p>
+</blockquote>
+<ul>
+<li>对象与方法的本质</li>
+<li>消息发送</li>
+<li>动态方法解析</li>
+<li>消息转发</li>
+</ul>
+<blockquote>
+<p>OC代码与RunTime进行交互的途径?</p>
+</blockquote>
+<ol>
+<li>runtime API;</li>
+<li>NSObject API;</li>
+<li>OC方法，例如@selector(run);</li>
+</ol>
+<blockquote>
+<p>OC方法调用 / 消息机制 是什么？</p>
+</blockquote>
+<ul>
+<li>给方法调用者发送消息，<code>objc_msgSend(id, sel)</code>底层实现，其中包含两个概念
+<ul>
+<li>消息接收者（receiver）即 <code>id</code>：（实例对象、类对象）</li>
+<li>消息名称 即 <code>sel</code>（<code>@selecter(test)</code> / <code>sel_registerName(&quot;test&quot;)</code>）: test</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><code>objc_msgSend()</code>执行流程（方法查找流程）可以大致分为3大阶段</p>
+</blockquote>
+<ul>
+<li>消息发送</li>
+<li>动态方法解析</li>
+<li>消息转发</li>
+</ul>
+<h1 id="一-对象与方法的本质">一. 对象与方法的本质</h1>
+<blockquote>
+<p>oc代码 转成c++ 代码命令：clang -rewrite-objc xxxx.m -o xxxx.cpp</p>
+</blockquote>
+<pre><code class="language-objc">// OC
+Person *person = [[Person alloc] init];
+
+// C++
+BXPerson *person = ((BXPerson *(*)(id, SEL))(void *)objc_msgSend)((id)((BXPerson *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass(&quot;BXPerson&quot;), sel_registerName(&quot;alloc&quot;)), sel_registerName(&quot;init&quot;));
+
+// C++ 去掉强制类型转换(简洁版)
+BXPerson *person = (objc_msgSend)((objc_msgSend)(objc_getClass(&quot;BXPerson&quot;), sel_registerName(&quot;alloc&quot;)), sel_registerName(&quot;init&quot;));
+
+// OC 
+[person run];
+
+// C++ 简洁版
+(objc_msgSend)(person, sel_registerName(&quot;run&quot;));
+
+// 其中 BXPerson 对象的定义
+#ifndef _REWRITER_typedef_BXPerson
+#define _REWRITER_typedef_BXPerson
+typedef struct objc_object BXPerson;
+typedef struct {} _objc_exc_BXPerson;
+#endif
+
+struct BXPerson_IMPL {
+	struct NSObject_IMPL NSObject_IVARS;
+};
+</code></pre>
+<ul>
+<li>(Person <em>(</em>)(id, SEL)) ：强制类型转换，可以看出，Person这个类的结构体包含的内容有：id self 消息接受者；sel _cmd 消息；</li>
+<li>objc_msgSend()</li>
+<li>objc_getClass(&quot;Person&quot;)</li>
+<li>sel_registerName(&quot;alloc&quot;)</li>
+<li>sel_registerName(&quot;init&quot;)</li>
+</ul>
+<h2 id="1-对象的本质结构体">1. 对象的本质：结构体</h2>
+<p>从上面代码，可以看出对象的本质就是结构体</p>
+<h2 id="2-方法的本质发送消息">2. 方法的本质：发送消息</h2>
+<blockquote>
+<p>objc_msgSend(person, sel_registerName(&quot;run&quot;));<br></p>
+</blockquote>
+<ul>
+<li>消息的组成：<br>
+<ul>
+<li>person - 消息接受者</li>
+<li>sel_registerName(&quot;run&quot;) - 方法编号，实质就是name</li>
+</ul>
+</li>
+<li>任何方法的调用底层函数（伪代码）：
+<ul>
+<li>void runIMP(id self, sel _cmd) {}，其中：</li>
+<li>id self 就是方法的接受者；</li>
+<li>sel _cmd 就是方法的编号；</li>
+<li>imp是函数实现的指针；</li>
+</ul>
+</li>
+<li><mark>怎样通过sel找到imp？</mark></li>
+</ul>
+<h1 id="二消息发送">二.消息发送</h1>
+<h2 id="1类方法与实例方法">1.类方法与实例方法</h2>
+<blockquote>
+<p>sel_registerName(&quot;run&quot;)  &lt;==&gt; @selector(run) <br></p>
+</blockquote>
+<ul>
+<li>实例方法调用：objc_msgSend(person, sel_registerName(&quot;run&quot;));</li>
+<li>类方法的调用：objc_msgSend(objc_getClass(&quot;BXPerson&quot;), sel_registerName(&quot;alloc&quot;))</li>
+</ul>
+<h2 id="总结">总结：</h2>
+<ul>
+<li>实例方法存在于该类的方法列表里</li>
+<li>类方法存在于元类的方法列表里，且在元类里以实例方法的形式存在</li>
+</ul>
+<h2 id="2-方法查找-objc_msgsend">2. 方法查找 objc_msgSend</h2>
+<h3 id="1objc_msgsend-为什么用汇编写">1.objc_msgSend 为什么用汇编写？</h3>
+<ul>
+<li>C语言（静态函数，编译时）不可能通过写一个函数来保留未知的参数跳转到任意指针，即无法完成运行时机制</li>
+<li>汇编速度快，并且可通过寄存器进行存储等操作</li>
+</ul>
+<h3 id="2oc中方法一步一步向机器能识别的代码走下去也就是方法查找流程">2.OC中方法一步一步向机器能识别的代码走下去，也就是方法查找流程</h3>
+<p>有两种消息查找方式：</p>
+<ul>
+<li>从“<mark>相应的缓存</mark>”中通过汇编 -- 快速</li>
+<li>C/C++/汇编 共同查找，是一个复杂的过程 -- 慢速；找到之后再存入缓存中（哈希表）一遍下次进行快速查找</li>
+</ul>
+<blockquote>
+<p>相应的缓存:类(objc_class)中有一个参数cache_t cache，用来存储sel &amp; imp 方法列表 即 哈希表，通过哈希表查找是快速的</p>
+</blockquote>
+<h3 id="3objc_msgsend-源码解析">3.objc_msgSend 源码解析</h3>
+<p>objc_msgSend 源码是汇编代码<br>
+入口：objc-msg-arm64.s</p>
+<pre><code>// 伪代码
+// 1. m.304 
+ENTRY _objc_msgSend
+
+// 2. calls imp or objc_msgSend_uncached
+CacheLookup NORMAL
+
+// 3. not-hit bucket
+CheckMiss
+
+// 4
+__objc_msgSend_uncached
+
+// 5.
+MethodTableLookup
+
+// 6. 从这步开始走到c/c++部分
+__class_lookupMethodAndLoadCache3
+
+// 结束 m.347
+END_ENTRY _objc_msgSend
+</code></pre>
+<ul>
+<li>汇编部分
+<ul>
+<li>大概就是从哈希表里直接查找，找到就返回imp，找不到就去和C中递归查找，并且找到后放入哈希表中缓存，以便下次快速查找</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-c++">// 1. 
+IMP _class_lookupMethodAndLoadCache3(id obj, SEL sel, Class cls)
+// 2.
+IMP lookUpImpOrForward(Class cls, SEL sel, id inst, 
+                       bool initialize, bool cache, bool resolver)
+</code></pre>
+<ul>
+<li>C、C++
+<ul>
+<li>lookUpImpOrForward</li>
+<li>realizeClass(cls);</li>
+<li>_class_initialize (_class_getNonMetaClass(cls, inst));</li>
+<li>以下是C递归查找，当前类 -&gt; 父类 -&gt; 元类 -&gt; ... -&gt;NSObject</li>
+<li>getMethodNoSuper_nolock(cls, sel);</li>
+<li>log_and_fill_cache(cls, meth-&gt;imp, sel, inst, cls);<br>
+<br><br>
+<br><br>
+以上是方法查找过程，且最终找到了imp</li>
+</ul>
+</li>
+</ul>
+<h1 id="三-动态方法解析-_class_resolvemethod">三. 动态方法解析 - _class_resolveMethod</h1>
+<blockquote>
+<p>&quot;No implementation found. Try method resolver once.&quot;<br><br>
+如果imp没有找到，此时要进行动态方法解析,且仅执行一次（标志位triedResolver）。</p>
+</blockquote>
+<pre><code>void _class_resolveMethod(Class cls, SEL sel, id inst)
+{
+    if (! cls-&gt;isMetaClass()) {
+        // try [cls resolveInstanceMethod:sel]
+        _class_resolveInstanceMethod(cls, sel, inst);
+    } 
+    // 元类，先走类方法解析
+    // 继续走类的实例方法解析
+    else {
+        // try [nonMetaClass resolveClassMethod:sel]
+        // and [cls resolveInstanceMethod:sel]
+        _class_resolveClassMethod(cls, sel, inst);
+        if (!lookUpImpOrNil(cls, sel, inst, 
+                            NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+        {
+            _class_resolveInstanceMethod(cls, sel, inst);
+        }
+    }
+}
+</code></pre>
+<p>_class_resolveMethod 源码解析：</p>
+<h2 id="1-method-resolution">1. Method resolution</h2>
+<ul>
+<li>1.判断 cls 非元类，走动态实例方法解析。<br>_class_resolveInstanceMethod &lt;==&gt; +(BOOL)resolveInstanceMethod:(SEL)sel;</li>
+<li>2.cls 是元类，走类方法解析。并且再走一步实例方法解析。<br>_class_resolveClassMethod &lt;==&gt; + (BOOL)resolveClassMethod:(SEL)sel; ==&gt;_class_resolveInstanceMethod</li>
+</ul>
+<blockquote>
+<p>可重写这两个方法以达到防止crash的情况。两个方法实现逻辑一致<br><br>
+我们如何收到这两个方法的调用？<br><br>
+BOOL (*msg)(Class, SEL, SEL) = (<strong>typeof</strong>(msg))objc_msgSend;<br><br>
+bool resolved = msg(_class_getNonMetaClass(cls, inst),<br>
+SEL_resolveClassMethod, sel);<br><br>
+实质就是在这两个方法内部，runtime会发送一个消息即这两个方法被调用。</p>
+</blockquote>
+<ul>
+<li>如果没有重写以上两个方法，runtime就会走下面一个流程，<mark>消息转发</mark></li>
+</ul>
+<h1 id="四-消息转发">四. 消息转发</h1>
+<blockquote>
+<p>// No implementation found, and method resolver didn't help.<br>   // Use forwarding.<br> 动态解析后没有实现以上两个方法则走消息转发机制</p>
+</blockquote>
+<blockquote>
+<p>imp = (IMP)_objc_msgForward_impcache;<br><br>
+消息转发是汇编调用，苹果闭源代码</p>
+</blockquote>
+<p>解决方案：(跨域请求声明)</p>
+<pre><code class="language-objc">// main.m
+#import &lt;Foundation/Foundation.h&gt;
+#import &quot;LGStudent.h&quot;
+#include &lt;objc/message.h&gt; // 看到这个斜杠我们就知道runtime不在runtime文件 在objc文件
+
+/***********************************************************************
+* instrumentObjcMessageSends
+**********************************************************************/
+// Define this everywhere even if it isn't used to simplify fork() safety code.
+// 该函数就是打印log
+extern void instrumentObjcMessageSends(BOOL);
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        instrumentObjcMessageSends(YES);
+        [LGPerson  walk];
+        instrumentObjcMessageSends(NO);
+    }
+    return 0;
+}
+</code></pre>
+<p>运行成功后，/private/tmp/msgSends-18316 该路径下回生成msgSends-xxx 方法列表，里面保存的是该项目的所有调用的方法&amp;顺序。由此我们可以重写一下方法，达到自定义功能，例如：<mark>crash收集，防止项目crash，埋点功能</mark> 等。aspect</p>
+<h2 id="1-method-fast-forwarding">1. Method Fast Forwarding</h2>
+<blockquote>
+<p>-(id)forwardingTargetForSelector:(SEL)aSelector <br><br>
+Runtimer 调用这个方法，给你一个把这个消息转发给其他对象的机会，只要这个方法返回的不是nil或者self，消息转发就会启动，返送的对象就是你返回的对象，否则就会继续走下面的方法 Normal Forwarding。此方法可以直接返回YES，则不会走下面两个方法。</p>
+</blockquote>
+<h2 id="2-method-normal-forwarding">2. Method Normal Forwarding</h2>
+<ul>
+<li>-(NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector <br> 方法签名：获取该函数的参数和返回值类型，如果该函数返回nil，runtime会发送-doesNorRecogniazeSelector:消息，程序挂掉。</li>
+<li>-(void)forwardInvocation:(NSInvocation *)anInvocation <br> 消息重定向转发：runtime会创建一个NSInvocation对象，并发送消息给目标对象。</li>
+</ul>
+<h1 id="扩展">扩展</h1>
+<ul>
+<li>如果在底层搜索不到对应的方法，尝试减少一个- 继续查找</li>
+</ul>
 <!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+<!-- more -->
+<!-- more -->
 ]]></content>
     </entry>
 </feed>

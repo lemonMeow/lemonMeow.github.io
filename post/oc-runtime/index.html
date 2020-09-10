@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>LemonMeow</title>
+<title>OC-Runtime | LemonMeow</title>
 
 <link rel="shortcut icon" href="https://lemonMeow.github.io/favicon.ico?v=1599717904514">
 
@@ -25,11 +25,11 @@
 
 
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
-    <div class="main-content">
-        <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg">
     <div class="navbar-brand">
         <img class="user-avatar" src="/images/avatar.png" alt="头像">
         <div class="site-name gt-c-content-color-first">
@@ -86,25 +86,27 @@
     </div>
 </nav>
 
-
-        <div class="post-list-container">
-    <div class="post-inner">
-        
-            <div class="post gt-bg-theme-color-second">
-                <div class="post-left">
-                    <div>
-                        
-                        <a href="https://lemonMeow.github.io/post/oc-runtime/">
-                            <span class="post-title gt-c-content-color-first">OC-Runtime</span>
-                        </a>
-                    </div>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    OC-Runtime
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2020-09-10 ·
+                    </time>
                     
-                        <a href="https://lemonMeow.github.io/post/oc-runtime/" class="post-feature-image-mobile"
-                           style="background-image: url('https://lemonMeow.github.io/post-images/oc-runtime.JPG')">
+                        <a href="https://lemonMeow.github.io/tag/oQgGI_fDf/" class="post-tags">
+                            # OC
                         </a>
                     
-                    <div class="gt-post-content post-abstract gt-c-content-color-second">
-                        <h1 id="如何理解runtime">如何理解RunTime？</h1>
+                </div>
+                
+                    <img class="post-feature-image" src="https://lemonMeow.github.io/post-images/oc-runtime.JPG" alt="">
+                
+                <div class="post-content">
+                    <h1 id="如何理解runtime">如何理解RunTime？</h1>
 <p>代码如何让机器运行启动展示我们想要的结果，实质是类似OC等高级语言通过和汇编机器语言编译成二进制数据对机器进行相应操作，这里我们有一个概念编译，先举个例子--OC中如果声明一个方法-(void)run;即使没有真正实现这个方法情况下，编译时是不会报错的，而在真正运行时才会由于找不到该方法的实现而crash，这就是OC的RunTime做的事情。</p>
 <blockquote>
 <p>RunTime围绕以下几点展开</p>
@@ -371,34 +373,21 @@ Runtimer 调用这个方法，给你一个把这个消息转发给其他对象�
 <ul>
 <li>如果在底层搜索不到对应的方法，尝试减少一个- 继续查找</li>
 </ul>
+<!-- more -->
+<!-- more -->
+<!-- more -->
 
-                    </div>
-                    <div class="post-info">
-                        <time class="post-time gt-c-content-color-first">
-                            发布于 · 2020-09-10 ·
-                        </time>
-                        
-                            <a href="https://lemonMeow.github.io/tag/oQgGI_fDf/" class="post-tag">
-                                # OC
-                            </a>
-                        
-                    </div>
                 </div>
-                
-                    <a href="https://lemonMeow.github.io/post/oc-runtime/" class="post-feature-image"
-                       style="background-image: url('https://lemonMeow.github.io/post-images/oc-runtime.JPG')">
-                    </a>
-                
-            </div>
+            </article>
+        </div>
+
         
-    </div>
-</div>
 
-        <div class="pagination-container">
-    
-    
-</div>
+        
 
+        
+
+        
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first"></div>
