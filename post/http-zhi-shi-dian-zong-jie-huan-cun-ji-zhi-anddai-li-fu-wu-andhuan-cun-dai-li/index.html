@@ -1,10 +1,10 @@
-<html lang="zh">
+<html>
 <head>
     <meta charset="utf-8"/>
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>关于 - LemonMeow</title>
+<title>HTTP 知识点总结-缓存机制&amp;代理服务&amp;缓存代理 | LemonMeow</title>
 
 <link rel="shortcut icon" href="https://lemonMeow.github.io/favicon.ico?v=1600616494735">
 
@@ -25,7 +25,7 @@
 
 
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
@@ -87,18 +87,66 @@
 </nav>
 
     <div class="post-container">
-        <div class="post-detail">
+        <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
-                <div class="post-content">
+                <h2 class="post-title">
+                    HTTP 知识点总结-缓存机制&amp;代理服务&amp;缓存代理
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2020-09-20 ·
+                    </time>
                     
+                        <a href="https://lemonMeow.github.io/tag/bZwlTQqr2/" class="post-tags">
+                            # HTTP 进阶
+                        </a>
+                    
+                        <a href="https://lemonMeow.github.io/tag/FgG_SqBAo/" class="post-tags">
+                            # HTTP
+                        </a>
+                    
+                </div>
+                
+                    <img class="post-feature-image" src="/post-images/http-zhi-shi-dian-zong-jie-huan-cun-ji-zhi-anddai-li-fu-wu-andhuan-cun-dai-li.png" alt="">
+                
+                <div class="post-content">
+                    <h1 id="生鲜速递-缓存机制">生鲜速递 - 缓存机制</h1>
+<p>HTTP 的缓存控制和条件请求，用好它们可以减少响应时间、节约网络流量。</p>
+<ol>
+<li>缓存是优化系统性能的重要手段，HTTP 传输的每一个环节中都可以有缓存；</li>
+<li>服务器使用“Cache-Control”设置缓存策略，常用的是“max-age”，表示资源的有效期；</li>
+<li>浏览器收到数据就会存入缓存，如果没过期就可以直接使用，过期就要去服务器验证是否仍然可用；</li>
+<li>验证资源是否失效需要使用“条件请求”，常用的是“if-Modified-Since”和“If-None-Match”，收到 304 就可以复用缓存里的资源；</li>
+<li>验证资源是否被修改的条件有两个：“Last-modified”和“ETag”，需要服务器预先在响应报文里设置，搭配条件请求使用；</li>
+<li>浏览器也可以发送“Cache-Control”字段，使用“max-age=0”或“no_cache”刷新数据。</li>
+</ol>
+<h1 id="良心中间商-代理服务">良心中间商 - 代理服务</h1>
+<ol start="7">
+<li>HTTP 代理就是客户端和服务器通信链路中的一个中间环节，为两端提供“代理服务”；</li>
+<li>代理处于中间层，为 HTTP 处理增加了更多的灵活性，可以实现** 负载均衡 <strong>、</strong> 安全防护 <strong>、</strong> 数据过滤 **等功能；</li>
+<li>代理服务器需要使用字段“Via”标记自己的身份，多个代理会形成一个列表；</li>
+<li>如果想要知道客户端的真实 IP 地址，可以使用字段“X-Forwarded-For”和“X-Real-IP”；</li>
+<li>专门的“代理协议”可以在不改动原始报文的情况下传递客户端的真实 IP。</li>
+</ol>
+<h1 id="冷链周转-缓存代理">冷链周转 - 缓存代理</h1>
+<ol>
+<li>计算机领域里最常用的性能优化手段是“时空转换”，也就是“时间换空间”或者“空间换时间”，HTTP 缓存属于后者；</li>
+<li>缓存代理是增加了缓存功能的代理服务，缓存源服务器的数据，分发给下游的客户端；</li>
+<li>“Cache-Control”字段也可以控制缓存代理，常用的有“private”“s-maxage”“no-transform”等，同样必须配合“Last-modified”“ETag”等字段才能使用；</li>
+<li>缓存代理有时候也会带来负面影响，缓存不良数据，需要及时刷新或删除。</li>
+</ol>
+
                 </div>
             </article>
         </div>
-        <br>
+
+        
+
         
 
         
 
+        
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first"></div>
