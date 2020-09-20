@@ -2,13 +2,90 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://lemonMeow.github.io</id>
     <title>LemonMeow</title>
-    <updated>2020-09-20T06:09:05.882Z</updated>
+    <updated>2020-09-20T07:43:00.031Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://lemonMeow.github.io"/>
     <link rel="self" href="https://lemonMeow.github.io/atom.xml"/>
     <logo>https://lemonMeow.github.io/images/avatar.png</logo>
     <icon>https://lemonMeow.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, LemonMeow</rights>
+    <entry>
+        <title type="html"><![CDATA[HTTP的重定向&跳转]]></title>
+        <id>https://lemonMeow.github.io/post/http-de-chong-ding-xiang-andtiao-zhuan/</id>
+        <link href="https://lemonMeow.github.io/post/http-de-chong-ding-xiang-andtiao-zhuan/">
+        </link>
+        <updated>2020-09-20T06:12:34.000Z</updated>
+        <summary type="html"><![CDATA[<p>这样的跳转动作是由浏览器的使用者主动发起的，可以称为“** 主动跳转** ”，但还有一类跳转是由服务器来发起的，浏览器使用者无法控制，相对地就可以称为“** 被动跳转 ** ”，这在 HTTP 协议里有个专门的名词，叫做“** 重定向 **”（Redirection）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>这样的跳转动作是由浏览器的使用者主动发起的，可以称为“** 主动跳转** ”，但还有一类跳转是由服务器来发起的，浏览器使用者无法控制，相对地就可以称为“** 被动跳转 ** ”，这在 HTTP 协议里有个专门的名词，叫做“** 重定向 **”（Redirection）。</p>
+<!-- more -->
+<h2 id="重定向的过程">重定向的过程</h2>
+<p>3××状态码时就说过，301 是“永久重定向”，302 是“临时重定向”，浏览器收到这两个状态码就会跳转到新的 URI。</p>
+<p>以上用户是无感知的，通过开发者工具我们可以看到这样的** 过程 **：请求一个连接，服务器首先返回一个302状态码，紧接着第二个请求被重定向到了“/index.html”。其中，第一个请求的相应报文里多了一个新的字段“Location: /index.html”</p>
+<p>“Location”字段属于响应字段，必须出现在响应报文里。但只有配合 301/302 状态码才有意义，它标记了服务器要求重定向的 URI，这里就是要求浏览器跳转到“index.html”。</p>
+<p>注意，在重定向时如果只是在站内跳转，你可以放心地使用相对 URI。但如果要跳转到站外，就必须用绝对 URI。</p>
+<h2 id="重定向的应用场景">重定向的应用场景</h2>
+<p>想了解一下什么时候需要重定向？</p>
+<ol>
+<li>
+<p>一个最常见的原因就是“资源不可用”，需要用另一个新的 URI 来代替。<br><br>
+至于不可用的原因那就很多了。例如域名变更、服务器变更、网站改版、系统维护，这些都会导致原 URI 指向的资源无法访问，为了避免出现 404，就需要用重定向跳转到新的 URI，继续为网民提供服务。</p>
+</li>
+<li>
+<p>另一个原因就是“避免重复”，让多个网址都跳转到一个 URI，增加访问入口的同时还不会增加额外的工作量。<br><br>
+例如，有的网站都会申请多个名称类似的域名，然后把它们再重定向到主站上。比如，你可以访问一下“qq.com”“github.com ”“bing.com”（记得事先清理缓存），看看它是如何重定向的。</p>
+</li>
+</ol>
+<p>使用重定向跳转，核心是要理解“重定向”和“永久 / 临时”这两个关键词</p>
+<ol>
+<li>
+<p>301 的含义是“永久”的。<br><br>
+如果域名、服务器、网站架构发生了大幅度的改变，比如启用了新域名、服务器切换到了新机房、网站目录层次重构，这些都算是“永久性”的改变。原来的 URI 已经不能用了，必须用 301“永久重定向”，通知浏览器和搜索引擎更新到新地址，这也是搜索引擎优化（SEO）要考虑的因素之一。</p>
+</li>
+<li>
+<p>302 的含义是“临时”的。<br><br>
+原来的 URI 在将来的某个时间点还会恢复正常，常见的应用场景就是系统维护，把网站重定向到一个通知页面，告诉用户过一会儿再来访问。另一种用法就是“服务降级”，比如在双十一促销的时候，把订单查询、领积分等不重要的功能入口暂时关闭，保证核心服务能够正常运行。</p>
+</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ HTTP Cookie 机制]]></title>
+        <id>https://lemonMeow.github.io/post/http/</id>
+        <link href="https://lemonMeow.github.io/post/http/">
+        </link>
+        <updated>2020-09-20T06:12:34.000Z</updated>
+        <summary type="html"><![CDATA[<p>我们知道HTTP 是“无状态”的，这既是优点也是缺点。优点是服务器没有状态差异，可以很容易地组成集群，而缺点就是无法支持需要记录状态的事务操作。</p>
+<p>Cookie 是服务器委托浏览器存储的一些数据，让服务器有了“记忆能力”；</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>我们知道HTTP 是“无状态”的，这既是优点也是缺点。优点是服务器没有状态差异，可以很容易地组成集群，而缺点就是无法支持需要记录状态的事务操作。</p>
+<p>Cookie 是服务器委托浏览器存储的一些数据，让服务器有了“记忆能力”；</p>
+<!-- more -->
+<h2 id="cookie的工作原理">Cookie的工作原理</h2>
+<p>HTTP 的 Cookie 机制类似于电影《记忆碎片》，既然记不住，那就通过纹身、贴纸条、拍立得等手段想办法记住。说回到HTTP相当于是服务器给每个客户端都贴上一张小纸条，上面写了一些只有服务器才能理解的数据，需要的时候客户端把这些信息发给服务器，服务器看到 Cookie，就能够认出对方是谁了。</p>
+<h2 id="如何操作以及方案">如何操作以及方案</h2>
+<ol>
+<li>响应报文使用 Set-Cookie 字段发送“key=value”形式的 Cookie 值；</li>
+<li>请求报文里用 Cookie 字段发送多个 Cookie 值；</li>
+<li>为了保护 Cookie，还要给它设置有效期、作用域等属性，常用的有 Max-Age、Expires、Domain、HttpOnly 等；</li>
+</ol>
+<h2 id="cookie的应用">cookie的应用</h2>
+<ol>
+<li>Cookie 最基本的一个用途就是身份识别，保存用户的登录信息，实现会话事务。</li>
+</ol>
+<blockquote>
+<p>比如，你用账号和密码登录某电商，登录成功后网站服务器就会发给浏览器一个 Cookie，内容大概是“name=yourid”，这样就成功地把身份标签贴在了你身上。<br>之后你在网站里随便访问哪件商品的页面，浏览器都会自动把身份 Cookie 发给服务器，所以服务器总会知道你的身份，一方面免去了重复登录的麻烦，另一方面也能够自动记录你的浏览记录和购物下单（在后台数据库或者也用 Cookie），实现了“状态保持”。</p>
+</blockquote>
+<ol start="2">
+<li>Cookie 的另一个常见用途是广告跟踪。</li>
+</ol>
+<blockquote>
+<p>你上网的时候肯定看过很多的广告图片，这些图片背后都是广告商网站（例如 Google），它会“偷偷地”给你贴上 Cookie 小纸条，这样你上其他的网站，别的广告就能用 Cookie 读出你的身份，然后做行为分析，再推给你广告。<br> 这种 Cookie 不是由访问的主站存储的，所以又叫“第三方 Cookie”（third-party cookie）。如果广告商势力很大，广告到处都是，那么就比较“恐怖”了，无论你走到哪里它都会通过 Cookie 认出你来，实现广告“精准打击”。<br>为了防止滥用 Cookie 搜集用户隐私，互联网组织相继提出了 DNT（Do Not Track）和 P3P（Platform for Privacy Preferences Project），但实际作用不大。</p>
+</blockquote>
+<h3 id="总结">总结</h3>
+<p>现在已经出现了多种 Local Web Storage 技术，能够比 Cookie 存储更多的数据，但 Cookie 仍然是最通用、兼容性最强的客户端数据存储手段。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[OC-Runtime]]></title>
         <id>https://lemonMeow.github.io/post/oc-runtime/</id>
