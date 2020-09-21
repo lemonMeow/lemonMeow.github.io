@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://lemonMeow.github.io</id>
     <title>LemonMeow</title>
-    <updated>2020-09-21T16:12:35.874Z</updated>
+    <updated>2020-09-21T16:27:40.401Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://lemonMeow.github.io"/>
     <link rel="self" href="https://lemonMeow.github.io/atom.xml"/>
@@ -11,12 +11,16 @@
     <icon>https://lemonMeow.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, LemonMeow</rights>
     <entry>
-        <title type="html"><![CDATA[ OC - 对象]]></title>
+        <title type="html"><![CDATA[ OC - NSObject]]></title>
         <id>https://lemonMeow.github.io/post/objective-c-de-ben-zhi/</id>
         <link href="https://lemonMeow.github.io/post/objective-c-de-ben-zhi/">
         </link>
         <updated>2020-09-20T15:36:05.000Z</updated>
-        <content type="html"><![CDATA[<p><strong>OC对象的本质</strong></p>
+        <summary type="html"><![CDATA[<p>让我们一起熟悉OC对象的本质</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>让我们一起熟悉OC对象的本质</p>
+<!-- more -->
+<p><strong>OC对象的本质</strong></p>
 <p>我们平时编写的Objective-C的代码，实际底层都是c/c++代码。<br>
 <img src="https://lemonMeow.github.io/post-images/1600616296925.png" alt="" loading="lazy"><br>
 所以OC的面向对象都是基于c/c++的数据结构实现的 - <strong>结构体</strong></p>
@@ -262,52 +266,16 @@ Class objc_getClass(const char *aClassName)
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[OC - 高级面试题]]></title>
-        <id>https://lemonMeow.github.io/post/oc-gao-ji-mian-shi-ti/</id>
-        <link href="https://lemonMeow.github.io/post/oc-gao-ji-mian-shi-ti/">
-        </link>
-        <updated>2020-09-20T08:20:28.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="oc对象">OC对象</h1>
-<p><strong>一个NSObject对象占用多少内存？</strong></p>
-<ul>
-<li>系统分配了16个字节给NSObject对象（通过malloc_size函数获得）</li>
-<li>但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）</li>
-</ul>
-<p><strong>类的方法存在哪里？为什么不存在实例对象中</strong></p>
-<ul>
-<li>存在于类的方法列表里</li>
-<li>因为方法只存一份即可，不需要创建一个实例对象就存一份。</li>
-</ul>
-<p><strong>以下两个类的实例对象内存大小</strong></p>
-<pre><code class="language-objc">@interface BXPerson : NSObject{
-    @public
-    int _age;
-    int _height;
-    int _num;
-}
-@property (nonatomic, assign) int height;
-@end
-
-@implementation BXPerson
-@end
-
-NSObject *obj = [[NSObject alloc] init];     
-NSLog(@&quot;%zd&quot;, class_getInstanceSize([NSObject class])); // 8
-NSLog(@&quot;%zd&quot;, malloc_size((__bridge const void *)(obj))); // 16
-
-BXPerson *person = [[BXPerson alloc] init];
-NSLog(@&quot;%zd&quot;, class_getInstanceSize([BXPerson class])); // 24
-NSLog(@&quot;%zd&quot;, malloc_size((__bridge const void *)(person))); // 32
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[HTTP 知识点总结-缓存机制&代理服务&缓存代理]]></title>
+        <title type="html"><![CDATA[HTTP 知识点总结]]></title>
         <id>https://lemonMeow.github.io/post/http-zhi-shi-dian-zong-jie-huan-cun-ji-zhi-anddai-li-fu-wu-andhuan-cun-dai-li/</id>
         <link href="https://lemonMeow.github.io/post/http-zhi-shi-dian-zong-jie-huan-cun-ji-zhi-anddai-li-fu-wu-andhuan-cun-dai-li/">
         </link>
         <updated>2020-09-20T07:44:42.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="生鲜速递-缓存机制">生鲜速递 - 缓存机制</h1>
+        <summary type="html"><![CDATA[<p>缓存机制&amp;代理服务&amp;缓存代理</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>缓存机制&amp;代理服务&amp;缓存代理</p>
+<!-- more -->
+<h1 id="生鲜速递-缓存机制">生鲜速递 - 缓存机制</h1>
 <p>HTTP 的缓存控制和条件请求，用好它们可以减少响应时间、节约网络流量。</p>
 <ol>
 <li>缓存是优化系统性能的重要手段，HTTP 传输的每一个环节中都可以有缓存；</li>
@@ -412,16 +380,56 @@ NSLog(@&quot;%zd&quot;, malloc_size((__bridge const void *)(person))); // 32
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[OC-Runtime]]></title>
+        <title type="html"><![CDATA[OC - 高级面试题]]></title>
+        <id>https://lemonMeow.github.io/post/oc-gao-ji-mian-shi-ti/</id>
+        <link href="https://lemonMeow.github.io/post/oc-gao-ji-mian-shi-ti/">
+        </link>
+        <updated>2020-09-18T08:20:28.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="oc对象">OC对象</h1>
+<p><strong>一个NSObject对象占用多少内存？</strong></p>
+<ul>
+<li>系统分配了16个字节给NSObject对象（通过malloc_size函数获得）</li>
+<li>但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）</li>
+</ul>
+<p><strong>类的方法存在哪里？为什么不存在实例对象中</strong></p>
+<ul>
+<li>存在于类的方法列表里</li>
+<li>因为方法只存一份即可，不需要创建一个实例对象就存一份。</li>
+</ul>
+<p><strong>以下两个类的实例对象内存大小</strong></p>
+<pre><code class="language-objc">@interface BXPerson : NSObject{
+    @public
+    int _age;
+    int _height;
+    int _num;
+}
+@property (nonatomic, assign) int height;
+@end
+
+@implementation BXPerson
+@end
+
+NSObject *obj = [[NSObject alloc] init];     
+NSLog(@&quot;%zd&quot;, class_getInstanceSize([NSObject class])); // 8
+NSLog(@&quot;%zd&quot;, malloc_size((__bridge const void *)(obj))); // 16
+
+BXPerson *person = [[BXPerson alloc] init];
+NSLog(@&quot;%zd&quot;, class_getInstanceSize([BXPerson class])); // 24
+NSLog(@&quot;%zd&quot;, malloc_size((__bridge const void *)(person))); // 32
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[OC - Runtime]]></title>
         <id>https://lemonMeow.github.io/post/oc-runtime/</id>
         <link href="https://lemonMeow.github.io/post/oc-runtime/">
         </link>
         <updated>2020-09-10T06:00:35.000Z</updated>
-        <summary type="html"><![CDATA[<h1 id="如何理解runtime">如何理解RunTime？</h1>
-<p>代码如何让机器运行启动展示我们想要的结果，实质是类似OC等高级语言通过和汇编机器语言编译成二进制数据对机器进行相应操作，这里我们有一个概念编译，先举个例子--OC中如果声明一个方法-(void)run;即使没有真正实现这个方法情况下，编译时是不会报错的，而在真正运行时才会由于找不到该方法的实现而crash，这就是OC的RunTime做的事情。</p>
+        <summary type="html"><![CDATA[<p><strong>如何理解RunTime？</strong><br>
+代码如何让机器运行启动展示我们想要的结果，实质是类似OC等高级语言通过和汇编机器语言编译成二进制数据对机器进行相应操作，这里我们有一个概念编译，先举个例子--OC中如果声明一个方法-(void)run;即使没有真正实现这个方法情况下，编译时是不会报错的，而在真正运行时才会由于找不到该方法的实现而crash，这就是OC的RunTime做的事情。</p>
 ]]></summary>
-        <content type="html"><![CDATA[<h1 id="如何理解runtime">如何理解RunTime？</h1>
-<p>代码如何让机器运行启动展示我们想要的结果，实质是类似OC等高级语言通过和汇编机器语言编译成二进制数据对机器进行相应操作，这里我们有一个概念编译，先举个例子--OC中如果声明一个方法-(void)run;即使没有真正实现这个方法情况下，编译时是不会报错的，而在真正运行时才会由于找不到该方法的实现而crash，这就是OC的RunTime做的事情。</p>
+        <content type="html"><![CDATA[<p><strong>如何理解RunTime？</strong><br>
+代码如何让机器运行启动展示我们想要的结果，实质是类似OC等高级语言通过和汇编机器语言编译成二进制数据对机器进行相应操作，这里我们有一个概念编译，先举个例子--OC中如果声明一个方法-(void)run;即使没有真正实现这个方法情况下，编译时是不会报错的，而在真正运行时才会由于找不到该方法的实现而crash，这就是OC的RunTime做的事情。</p>
 <!-- more -->
 <blockquote>
 <p>RunTime围绕以下几点展开</p>
