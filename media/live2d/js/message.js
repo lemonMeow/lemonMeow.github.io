@@ -20,12 +20,15 @@ String.prototype.renderTip = function (context) {
 	return renderTip(this, context);
 };
 
-var re = /x/;
-console.log(re);
-re.toString = function () {
-	showMessage("哈哈，你打开了控制台，是想要看看我的秘密吗？", 5000);
-	return "";
-};
+(function () {
+	var element = new Image();
+	Object.defineProperty(element, "id", {
+		get: function () {
+			showMessage("哈哈，你打开控制台是想要看看我的秘密吗？我在盯着你哟~~", 5000);
+		},
+	});
+	console.log(element);
+})();
 
 $(document).on("copy", function () {
 	showMessage("你都复制了些什么呀，转载要记得加上出处哦~~", 5000);
