@@ -24,7 +24,7 @@ String.prototype.renderTip = function (context) {
 	var element = new Image();
 	Object.defineProperty(element, "id", {
 		get: function () {
-			showMessage("哈哈，你打开控制台是想要看看我的秘密吗？我在盯着你哟~~", 5000);
+			showMessage("咦？你打开控制台是想看本喵的秘密吗？", 5000);
 		},
 	});
 	console.log(element);
@@ -110,7 +110,12 @@ initTips();
 				text = "嗨~ 快来逗我玩吧！";
 			}
 		} else {
-			text = '欢迎阅读<span style="color:#0099cc;">「 ' + document.title.split(" - ")[0] + " 」</span>";
+			var documentTitle = document.title.split(" - ")[0];
+			if (documentTitle === "搜索") {
+				text = '搜索方式为<span style="color:#0099cc;">「 模糊搜索 」</span>哟';
+			} else {
+				text = '欢迎阅读<span style="color:#0099cc;">「 ' + documentTitle + " 」</span>";
+			}
 		}
 	}
 	showMessage(text, 12000);
