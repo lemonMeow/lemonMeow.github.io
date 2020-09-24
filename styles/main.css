@@ -39,8 +39,6 @@ a:hover {
   color: #0085a1;
 }
 blockquote {
-  color: #868e96;
-  border-left: 2px solid #555555;
   padding: 0 1em;
 }
 .section-heading {
@@ -65,7 +63,6 @@ blockquote {
 }
 ::selection {
   color: #fff;
-  background: #0085a1;
   text-shadow: none;
 }
 img::-moz-selection {
@@ -79,44 +76,6 @@ img::selection {
 img::-moz-selection {
   color: #fff;
   background: 0 0;
-}
-.post-preview > a {
-  color: #4a4a4a;
-}
-.post-preview > a:focus,
-.post-preview > a:hover {
-  text-decoration: none;
-  color: #0085a1;
-}
-.post-preview > a > .post-title {
-  font-size: 28px;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
-.post-preview > a > .post-subtitle {
-  font-weight: 300;
-  margin: 0 0 10px;
-}
-.post-preview > .post-meta {
-  font-size: 16px;
-  font-style: italic;
-  margin-top: 4px;
-  color: #868e96;
-  font-family: Lora, "Times New Roman", serif;
-}
-.post-preview > .post-meta > a {
-  text-decoration: none;
-  color: #868e96;
-}
-.post-preview > .post-meta > a:focus,
-.post-preview > .post-meta > a:hover {
-  text-decoration: underline;
-  color: #0085a1;
-}
-@media only screen and (min-width: 768px) {
-  .post-preview > a > .post-title {
-    font-size: 28px;
-  }
 }
 .floating-label-form-group {
   font-size: 14px;
@@ -498,13 +457,11 @@ h6 {
   padding: 10px 25px;
 }
 .sticky-top-flag {
-  color: white;
   padding: 3px 10px;
   font-size: 12px;
   border-radius: 5px;
   margin-right: 10px;
   vertical-align: middle;
-  background: #5d656d !important;
 }
 h3.post-subtitle {
   margin-top: 0;
@@ -513,14 +470,49 @@ h3.post-subtitle {
 h3.post-subtitle p {
   font-size: 13px;
 }
+.post-preview > a {
+  color: #4a4a4a;
+}
+.post-preview > a:focus,
+.post-preview > a:hover {
+  text-decoration: none;
+  color: #0085a1;
+}
+.post-preview > a > .post-title {
+  font-size: 28px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+.post-preview > a > .post-subtitle {
+  font-weight: 300;
+  margin: 0 0 10px;
+}
+.post-preview > .post-meta {
+  font-size: 16px;
+  font-style: italic;
+  margin-top: 4px;
+  color: #868e96;
+  font-family: Lora, "Times New Roman", serif;
+}
+.post-preview > .post-meta > a {
+  text-decoration: none;
+}
+.post-preview > .post-meta > a:focus,
+.post-preview > .post-meta > a:hover {
+  text-decoration: underline;
+  color: #0085a1;
+}
+@media only screen and (min-width: 768px) {
+  .post-preview > a > .post-title {
+    font-size: 28px;
+  }
+}
 /************ 首页cell **************/
 .row .post-row-container {
   margin: 30px 30px;
   border-radius: 10px;
   padding: 10px 30px 20px 30px;
   transition: all 0.3s;
-  background: #f3f3f3a8;
-  box-shadow: 0 3px 15px 2px rgb(193 188 188);
 }
 .row .post-row-container:hover {
   transform: scale(1.012);
@@ -530,7 +522,6 @@ h3.post-subtitle p {
   align-items: center;
 }
 .row .post-row-container .title-floor .post-title-container a {
-  color: #4a4a4a;
   text-decoration: none;
   position: relative;
   margin-bottom: 3px;
@@ -539,18 +530,13 @@ h3.post-subtitle p {
   margin: 10px 0px;
   font-size: 1.3rem;
 }
-.row .post-row-container .title-floor .post-title-container a:hover {
-  color: #0085a1;
-}
 .row .post-row-container .title-floor .post-title-container a:hover:after {
   width: 100%;
-  background: #0085a1;
 }
 .row .post-row-container .title-floor .post-title-container a:after {
   content: "";
   width: 0;
   height: 2px;
-  background: #4a4a4a;
   position: absolute;
   left: 0;
   bottom: 4px;
@@ -586,18 +572,12 @@ h3.post-subtitle p {
 .row .post-row-container .post-row-sec-floor .post-tag {
   padding: 1px 6px;
   border-radius: 14px;
-  color: #4a4a4a;
   font-size: 10px;
   font-weight: 800;
   border-width: 1px;
-  border-color: #4a4a4a;
   border-style: dashed;
   margin-right: 10px;
   text-decoration: none;
-}
-.row .post-row-container .post-row-sec-floor .post-tag:hover {
-  color: #0085a1;
-  border-color: #0085a1;
 }
 /*横屏 | 浏览器*/
 @media all and (orientation: landscape) {
@@ -671,7 +651,6 @@ h3.post-subtitle p {
   font-size: 10px;
 }
 .toc-container li a:hover {
-  background: #efeeee;
   border-radius: 5px;
 }
 .toc-container li a.current {
@@ -679,16 +658,12 @@ h3.post-subtitle p {
   background: #efeeee;
 }
 .currentToc {
-  background-color: #e7dfdf !important;
-  color: #bd3c3c !important;
   border-radius: 5px;
 }
 ul.markdownIt-TOC {
-  border: 1px solid #e6e6e6;
   border-radius: 15px;
   padding: 14px 0px;
   overflow: hidden;
-  background-color: #fdfdfd;
   line-height: 1.75;
 }
 .toc-container .markdownIt-TOC ul {
@@ -853,8 +828,7 @@ header.masthead .overlay {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: #212529;
-  opacity: 0.5;
+  background-color: #000000;
 }
 header.masthead .page-heading,
 header.masthead .post-heading,
@@ -991,7 +965,6 @@ header.masthead .row .site-heading h1 {
   height: auto;
   margin-bottom: 24px;
   border-radius: 15px;
-  box-shadow: 0 3px 15px 2px rgb(80 77 77);
 }
 /*手机竖屏*/
 @media all and (orientation: portrait) {
@@ -1014,7 +987,7 @@ header.masthead .row .site-heading h1 {
   position: relative;
   left: -2px;
   width: 180px;
-  height: 20px;
+  height: 23px;
   padding: 0 0 2px 35px;
   font-size: 12px;
   background-size: 20px;
@@ -1028,7 +1001,10 @@ header.masthead .row .site-heading h1 {
   transition: border-color 0.2s;
 }
 #gridea-search-form .fa-search {
-  top: 5px !important;
+  top: 6px !important;
+}
+#gridea-search-form .fa-search:before {
+  color: #4a4a4a;
 }
 h3.serchedPreview {
   font-size: 13px;
@@ -1048,7 +1024,7 @@ h3.serchedPreview {
   }
   #gridea-search-form .fa-search {
     left: 10px !important;
-    top: 4px !important;
+    top: 6px !important;
   }
   #gridea-search-form .search-input {
     width: 100%;
@@ -1062,20 +1038,16 @@ h3.serchedPreview {
 }
 #mainNav {
   position: absolute;
-  border-bottom: 1px solid #e9ecef;
-  background-color: #fff;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 #mainNav .navbar-brand {
   font-weight: 800;
-  color: #343a40;
 }
 #mainNav .navbar-toggler {
   font-size: 12px;
   font-weight: 800;
   padding: 13px;
   text-transform: uppercase;
-  color: #343a40;
 }
 #mainNav .navbar-nav > li.nav-item > a {
   font-size: 12px;
@@ -1115,8 +1087,6 @@ h3.serchedPreview {
     position: fixed;
     top: -67px;
     transition: transform 0.2s;
-    border-bottom: 1px solid #fff;
-    background-color: rgba(255, 255, 255, 0.9);
   }
   #mainNav.is-fixed .navbar-brand {
     color: #212529;
@@ -1137,8 +1107,8 @@ h3.serchedPreview {
   }
 }
 .page {
-  border-top: 1px solid #eee;
-  background-color: #fff;
+  background-color: transparent;
+  margin-top: 15px;
 }
 .page a {
   border: none;
@@ -1151,30 +1121,166 @@ h3.serchedPreview {
   list-style-type: disc;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
-  margin-top: -1px;
+  margin-top: 6px;
 }
 .pagination-ul li {
   list-style-type: none;
   display: inline-block;
   cursor: pointer;
 }
-.pagination-ul a {
-  width: 32px;
+.pagination-ul li a {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
   font-size: 16px;
-  padding: 1px 0;
   display: inline-block;
-  border-top: 1px solid transparent;
-}
-.pagination-active a {
-  color: #fff;
-  background: #ccc;
-  border-top-color: #ccc;
+  text-decoration: none;
+  border-radius: 50%;
+  margin: 0 5px;
 }
 .pagination-ul a:hover {
-  border-top: 1px solid #222;
+  color: white;
+  transform: scale(1.012);
 }
-.pagination-dir a {
-  width: 32px;
+.pagination-ul .pagination-dir a {
   display: inline-block;
   border-top: 1px solid transparent;
 }
+
+			body {
+				background-color: #ffffff !important;
+				color: #4a4a4a !important;
+			}
+
+			#mainNav.is-fixed {
+				background-color: RGBA(255,255,255,0.9);
+				border-bottom: 1px solid #ffffff;
+			}
+
+			.fixed-top {
+				background-color: #ffffff;
+			}
+			.fixed-top .navbar-brand,
+			.fixed-top .navbar-nav > li.nav-item > a,
+			.fixed-top .navbar-toggler {
+				color: #4a4a4a;
+			}
+			.navbar-light .navbar-toggler {
+				border-color: RGBA(74,74,74,0.5) !important;;
+			}
+
+			a {
+				color: RGBA(0,133,161,0.7) ;
+			}
+
+			a:focus,
+			a:hover {
+				color: #0085a1 ;
+			}
+
+            .row .post-row-container {
+				background-color: #f3f3f3a8 !important;
+			}
+
+			.title-floor .post-title-container a,
+			h3.post-subtitle,
+			.pagination-ul li a,
+			.list-inline .list-inline-item a,
+			#mainNav.is-fixed .navbar-brand,
+			#mainNav.is-fixed .navbar-nav > li.nav-item > a {
+				color: #4a4a4a !important;
+			}
+			.title-floor .post-title-container a:after,
+			.pagination-active a{
+				background-color: #4a4a4a !important;
+			}
+
+			blockquote {
+				border-left: 2px solid #0085a1;
+				color: #0085a1 !important;
+			}
+
+			.post-preview > .post-meta {
+				color: #868e96 !important;
+			}
+
+			.title-floor .post-title-container a:hover,
+			#mainNav.is-fixed .navbar-brand:hover,
+			#mainNav.is-fixed .navbar-nav > li.nav-item > a:hover {
+				color: #0085a1 !important;
+			}
+
+			.title-floor .post-title-container a:hover::after{
+				background-color: #0085a1 !important;
+			}
+
+			::selection{
+				background: #0085a1 !important;
+			}
+
+			.post-row-sec-floor .post-tag {
+				color: #4a4a4a !important;
+				border-color: #4a4a4a !important;;
+			}
+
+			.post-row-sec-floor .post-tag:hover {
+				color: #0085a1 !important;
+				border-color: #0085a1 !important;
+			}
+
+			.page {
+				border-top: 1px solid #0000001a !important;
+			}
+
+			hr {
+				border-top: 1px solid #0000001a !important;
+			}
+
+			.fa-inverse {
+				color: #ffffff !important;
+			}
+
+			.pagination-ul a:hover {
+				background-color: #817c7c !important;
+				color: #ffffff !important;
+				box-shadow: 0 1px 4px 2px RGBA(129,124,124,0.9) !important;
+			}
+
+			.pagination-ul .pagination-active a{
+				color: #ffffff !important;
+				box-shadow: 0 1px 4px 2px RGBA(129,124,124,0.9) !important;
+			}
+
+			.sticky-top-flag {
+				background: RGBA(74,74,74,0.8) !important;
+				color: #ffffff !important;
+			}
+
+			header.masthead .overlay {
+				opacity: 0.4 !important;
+			}
+
+			.toc-container .markdownIt-TOC {
+				border: 1px solid RGBA(74,74,74,0.3);
+				background-color: #ffffff;
+			}
+
+			.toc-container .markdownIt-TOC li a {
+				color: RGBA(74,74,74,0.5);
+			}
+
+			.currentToc {
+				color: #0085a1 !important;
+				background-color: RGBA(74,74,74,0.1);
+			}
+
+			.toc-container li a:hover {
+				background-color: RGBA(74,74,74,0.1);
+			}
+
+			.row .post-row-container ,
+			#post-content-article .container .post-feature-header-image {
+				box-shadow: 0 3px 15px 2px #c1bcbc;;
+			}
+			
+         
