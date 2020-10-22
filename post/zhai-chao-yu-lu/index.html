@@ -10,14 +10,14 @@
 <meta name="keywords" content="">
 <meta name="description" content="欢迎访问[LemonMeow]的个人博客">
 <meta name="author" content="kveln">
-<title>HTTP 知识点总结 | LemonMeow</title>
+<title>摘抄语录 | LemonMeow</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
 <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
 <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 <link
   href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
   rel='stylesheet' type='text/css'>
-<link rel="alternate" type="application/rss+xml" title="HTTP 知识点总结 | LemonMeow » Feed"
+<link rel="alternate" type="application/rss+xml" title="摘抄语录 | LemonMeow » Feed"
   href="https://lemonMeow.github.io/atom.xml">
 <link rel="stylesheet"
   href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
@@ -30,8 +30,8 @@
 
 <script>hljs.initHighlightingOnLoad();</script>
 
-  <meta property="og:description" content="HTTP 知识点总结" />
-  <meta property="og:url" content="https://lemonMeow.github.io/post/http-zhi-shi-dian-zong-jie-huan-cun-ji-zhi-anddai-li-fu-wu-andhuan-cun-dai-li/" />
+  <meta property="og:description" content="摘抄语录" />
+  <meta property="og:url" content="https://lemonMeow.github.io/post/zhai-chao-yu-lu/" />
   <meta property="og:locale" content="zh-CN" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="LemonMeow" />
@@ -151,15 +151,11 @@
             <div class="post-heading">
               <span class="tags">
                 
-                <a href="https://lemonMeow.github.io/tag/bZwlTQqr2/" class="tag">HTTP 进阶</a>
-                
-                <a href="https://lemonMeow.github.io/tag/FgG_SqBAo/" class="tag">HTTP</a>
-                
               </span>
-              <h1>HTTP 知识点总结</h1>
+              <h1>摘抄语录</h1>
               <span class="meta">
                 Posted on
-                2020-09-20，3 min read
+                2020-10-22，3 min read
               </span>
             </div>
           
@@ -174,57 +170,42 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto post-content-container">
           
-          <img class="post-feature-header-image" src="/post-images/http-zhi-shi-dian-zong-jie-huan-cun-ji-zhi-anddai-li-fu-wu-andhuan-cun-dai-li.png" alt="封面图">
+          <img class="post-feature-header-image" src="https://lemonMeow.github.io/post-images/zhai-chao-yu-lu.png" alt="封面图">
           </img>
           
-          <p>缓存机制&amp;代理服务&amp;缓存代理</p>
+          <p>记录一些自己喜欢的、有感触的美文，随着时间的流逝、年龄的增长，可能会发现自己曾经如此幼稚、可爱，还曾自怨自艾、缺少自信，等等。但这就是我...</p>
 <!-- more -->
-<h1 id="生鲜速递-缓存机制">生鲜速递 - 缓存机制</h1>
-<p>HTTP 的缓存控制和条件请求，用好它们可以减少响应时间、节约网络流量。</p>
 <ol>
-<li>缓存是优化系统性能的重要手段，HTTP 传输的每一个环节中都可以有缓存；</li>
-<li>服务器使用“Cache-Control”设置缓存策略，常用的是“max-age”，表示资源的有效期；</li>
-<li>浏览器收到数据就会存入缓存，如果没过期就可以直接使用，过期就要去服务器验证是否仍然可用；</li>
-<li>验证资源是否失效需要使用“条件请求”，常用的是“if-Modified-Since”和“If-None-Match”，收到 304 就可以复用缓存里的资源；</li>
-<li>验证资源是否被修改的条件有两个：“Last-modified”和“ETag”，需要服务器预先在响应报文里设置，搭配条件请求使用；</li>
-<li>浏览器也可以发送“Cache-Control”字段，使用“max-age=0”或“no_cache”刷新数据。</li>
-</ol>
-<h1 id="良心中间商-代理服务">良心中间商 - 代理服务</h1>
-<ol start="7">
-<li>HTTP 代理就是客户端和服务器通信链路中的一个中间环节，为两端提供“代理服务”；</li>
-<li>代理处于中间层，为 HTTP 处理增加了更多的灵活性，可以实现** 负载均衡 <strong>、</strong> 安全防护 <strong>、</strong> 数据过滤 **等功能；</li>
-<li>代理服务器需要使用字段“Via”标记自己的身份，多个代理会形成一个列表；</li>
-<li>如果想要知道客户端的真实 IP 地址，可以使用字段“X-Forwarded-For”和“X-Real-IP”；</li>
-<li>专门的“代理协议”可以在不改动原始报文的情况下传递客户端的真实 IP。</li>
-</ol>
-<h1 id="冷链周转-缓存代理">冷链周转 - 缓存代理</h1>
+<li>讲真的，我经常不敢相信自己已经二十多岁了，却还是那个分不清东南西北经常迷路的孩子，一难过就哭，一生气就不想说话，表情写在脸上控制不住，我好像还什么都没有准备好，就到了谈婚论嫁的年纪。我以为到了二十岁，人生就会哗的一下子变得壮观美丽，但不是的，我们以为特别的，实际上也不过如此 -- 七七酱JQ</li>
+<li>人生是单行道，没有办法回顾，所以也没有什么好后悔的，做自己，接受自己，对自己有合理的期望，努力生活，不放弃爱，这样就好了。-- 七七酱JQ</li>
+<li>二十岁的你，迷茫又着急，你想要房子想要车子，你想要旅行想要高品质生活，你那么年轻却窥视觊觎整个世界，你难么浮躁却想要看透生活。你不断催促自己赶快成长，却沉不下心来读一篇文章，你一次次吹响前进的号角，却总是倒在离出发不远的地方。请坚韧些，年轻的朋友，勇敢地前行，愿你以渺小启程，以伟大结束。 -- 七七酱JQ</li>
+<li>“无论生活怎样，希望你，保持自律，保持清醒。昨日之深渊，今日之浅淡”</li>
+<li>很多人喜欢你，因为你漂亮好看，会说机灵话，有趣好玩儿，多功能，这些喜欢暗含着很多期望。而有的人喜欢人，是看见你哭和狼狈，知道你的辛苦和平凡，允许你不美又不乖，并且好像把肩膀和糖果都给你。</li>
+<li>人生大部分困扰：
 <ol>
-<li>计算机领域里最常用的性能优化手段是“时空转换”，也就是“时间换空间”或者“空间换时间”，HTTP 缓存属于后者；</li>
-<li>缓存代理是增加了缓存功能的代理服务，缓存源服务器的数据，分发给下游的客户端；</li>
-<li>“Cache-Control”字段也可以控制缓存代理，常用的有“private”“s-maxage”“no-transform”等，同样必须配合“Last-modified”“ETag”等字段才能使用；</li>
-<li>缓存代理有时候也会带来负面影响，缓存不良数据，需要及时刷新或删除。</li>
+<li>分不清事情和情绪：就是很多事情来的时候，我们会产生情绪用情绪去决策，而不是根据事情本身去决策</li>
+<li>分不清目标和手段：有的时候我们会理直气壮，是因为我们觉得出发点正确，当我们这么认为的时候，我们就会觉得我们做的所有事情都是对的，而实际上并不是。</li>
+<li>分不清自我和反馈：作为一个个体来讲，你并不清楚这个东西到底是你自己想要的，还是别人鼓励你或者别人期待你想要的</li>
+</ol>
+</li>
+<li>我本不善言辞，却忙于人际交往，我本喜欢读出，却忙于奔波忙碌，而所作的一切，都是为了得到那能解万丈惆怅的碎银几两。原来这个世界，不允许我们内向。</li>
 </ol>
 
-          <div class="toc-container"><ul class="markdownIt-TOC">
-<li><a href="#%E7%94%9F%E9%B2%9C%E9%80%9F%E9%80%92-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6">生鲜速递 - 缓存机制</a></li>
-<li><a href="#%E8%89%AF%E5%BF%83%E4%B8%AD%E9%97%B4%E5%95%86-%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1">良心中间商 - 代理服务</a></li>
-<li><a href="#%E5%86%B7%E9%93%BE%E5%91%A8%E8%BD%AC-%E7%BC%93%E5%AD%98%E4%BB%A3%E7%90%86">冷链周转 - 缓存代理</a></li>
-</ul>
-</div>
+          <div class="toc-container"></div>
           
           <hr />
           <p class="next-post">下一篇：
-            <a href="https://lemonMeow.github.io/post/http-de-chong-ding-xiang-andtiao-zhuan/">
+            <a href="https://lemonMeow.github.io/post/objective-c-de-ben-zhi/">
               <span class="post-title">
-                HTTP 重定向&amp;跳转&rarr;
+                 OC - NSObject&rarr;
               </span>
             </a>
           </p>
           
           <div class="comment" style="text-align: center;">
             
-            <span id="/post/http-zhi-shi-dian-zong-jie-huan-cun-ji-zhi-anddai-li-fu-wu-andhuan-cun-dai-li/" class="leancloud_visitors"
-              data-flag-title="HTTP 知识点总结">
+            <span id="/post/zhai-chao-yu-lu/" class="leancloud_visitors"
+              data-flag-title="摘抄语录">
               <em class="post-meta-item-text">阅读量 </em>
               <i class="leancloud-visitors-count">loading...</i>
             </span>
