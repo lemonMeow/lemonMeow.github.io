@@ -10,14 +10,14 @@
 <meta name="keywords" content="">
 <meta name="description" content="欢迎访问[LemonMeow]的个人博客">
 <meta name="author" content="kveln">
-<title>HTTP 重定向&amp;跳转 | LemonMeow</title>
+<title>OC-KVO &amp; KVC | LemonMeow</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
 <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
 <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 <link
   href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
   rel='stylesheet' type='text/css'>
-<link rel="alternate" type="application/rss+xml" title="HTTP 重定向&amp;跳转 | LemonMeow » Feed"
+<link rel="alternate" type="application/rss+xml" title="OC-KVO &amp; KVC | LemonMeow » Feed"
   href="https://lemonMeow.github.io/atom.xml">
 <link rel="stylesheet"
   href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
@@ -30,8 +30,8 @@
 
 <script>hljs.initHighlightingOnLoad();</script>
 
-  <meta property="og:description" content="HTTP 重定向&amp;跳转" />
-  <meta property="og:url" content="https://lemonMeow.github.io/post/http-de-chong-ding-xiang-andtiao-zhuan/" />
+  <meta property="og:description" content="OC-KVO &amp; KVC" />
+  <meta property="og:url" content="https://lemonMeow.github.io/post/oc-kvo/" />
   <meta property="og:locale" content="zh-CN" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="LemonMeow" />
@@ -151,15 +151,11 @@
             <div class="post-heading">
               <span class="tags">
                 
-                <a href="https://lemonMeow.github.io/tag/bZwlTQqr2/" class="tag">HTTP 进阶</a>
-                
-                <a href="https://lemonMeow.github.io/tag/FgG_SqBAo/" class="tag">HTTP</a>
-                
               </span>
-              <h1>HTTP 重定向&amp;跳转</h1>
+              <h1>OC-KVO &amp; KVC</h1>
               <span class="meta">
                 Posted on
-                2020-09-20，3 min read
+                2020-10-27，4 min read
               </span>
             </div>
           
@@ -174,45 +170,163 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto post-content-container">
           
-          <img class="post-feature-header-image" src="/post-images/http-de-chong-ding-xiang-andtiao-zhuan.png" alt="封面图">
+          <img class="post-feature-header-image" src="https://lemonMeow.github.io/post-images/oc-kvo.png" alt="封面图">
           </img>
           
-          <p>这样的跳转动作是由浏览器的使用者主动发起的，可以称为“<strong>主动跳转</strong>”，但还有一类跳转是由服务器来发起的，浏览器使用者无法控制，相对地就可以称为“<strong>被动跳转</strong> ”，这在 HTTP 协议里有个专门的名词，叫做“<strong>重定向</strong>”（Redirection）。</p>
+          <p>KVO 全称是 key-value Observing，键值监听，可以用于监听某个对象属性值的改变；<br>
+KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性；</p>
+<p>用例代码在文章最后面展示（待更新）。</p>
 <!-- more -->
-<h2 id="重定向的过程">重定向的过程</h2>
-<p>3××状态码时就说过，301 是“永久重定向”，302 是“临时重定向”，浏览器收到这两个状态码就会跳转到新的 URI。</p>
-<p>以上用户是无感知的，通过开发者工具我们可以看到这样的<strong>过程</strong>：请求一个连接，服务器首先返回一个302状态码，紧接着第二个请求被重定向到了“/index.html”。其中，第一个请求的相应报文里多了一个新的字段“Location: /index.html”</p>
-<p>“Location”字段属于响应字段，必须出现在响应报文里。但只有配合 301/302 状态码才有意义，它标记了服务器要求重定向的 URI，这里就是要求浏览器跳转到“index.html”。</p>
-<p>注意，在重定向时如果只是在站内跳转，你可以放心地使用相对 URI。但如果要跳转到站外，就必须用绝对 URI。</p>
-<h2 id="重定向的应用场景">重定向的应用场景</h2>
-<p>想了解一下什么时候需要重定向？</p>
+<br>
+<h1 id="kvo">KVO</h1>
+<h1 id="一-kvo-的实质">一. KVO 的实质</h1>
+<h2 id="1-ios用什么方式实现对一个对象的kvokvo的本质是什么">1. iOS用什么方式实现对一个对象的KVO？(KVO的本质是什么？)</h2>
+<h3 id="1-未使用kvo监听的对象">1. 未使用KVO监听的对象</h3>
+<figure data-type="image" tabindex="1"><img src="https://lemonMeow.github.io/post-images/1603812647145.png" alt="" loading="lazy"></figure>
+<h3 id="2-使用了kvo监听的对象">2. 使用了KVO监听的对象</h3>
+<figure data-type="image" tabindex="2"><img src="https://lemonMeow.github.io/post-images/1603812654208.png" alt="" loading="lazy"></figure>
+<h3 id="3-本质解析">3. 本质解析</h3>
 <ol>
-<li>
-<p>一个最常见的原因就是“资源不可用”，需要用另一个新的 URI 来代替。<br><br>
-至于不可用的原因那就很多了。例如域名变更、服务器变更、网站改版、系统维护，这些都会导致原 URI 指向的资源无法访问，为了避免出现 404，就需要用重定向跳转到新的 URI，继续为网民提供服务。</p>
-</li>
-<li>
-<p>另一个原因就是“避免重复”，让多个网址都跳转到一个 URI，增加访问入口的同时还不会增加额外的工作量。<br><br>
-例如，有的网站都会申请多个名称类似的域名，然后把它们再重定向到主站上。比如，你可以访问一下“qq.com”“github.com ”“bing.com”（记得事先清理缓存），看看它是如何重定向的。</p>
-</li>
+<li>利用Runtime API动态生成一个子类，（在添加KVO时动态添加了对应的NSKVONotifying_BXPerson类，继承自BXPerson）。</li>
+<li>并且让instance对象的isa指针指向这个NSKVONotifying_BXPerson。</li>
+<li>当修改这个instance对象的属性值时，其内部的setValue:()方法实际的实现是调用Foundation的_NSSetIntValueAndNotify函数。</li>
 </ol>
-<p>使用重定向跳转，核心是要理解“重定向”和“永久 / 临时”这两个关键词</p>
-<ol>
-<li>
-<p>301 的含义是“永久”的。<br><br>
-如果域名、服务器、网站架构发生了大幅度的改变，比如启用了新域名、服务器切换到了新机房、网站目录层次重构，这些都算是“永久性”的改变。原来的 URI 已经不能用了，必须用 301“永久重定向”，通知浏览器和搜索引擎更新到新地址，这也是搜索引擎优化（SEO）要考虑的因素之一。</p>
-</li>
-<li>
-<p>302 的含义是“临时”的。<br><br>
-原来的 URI 在将来的某个时间点还会恢复正常，常见的应用场景就是系统维护，把网站重定向到一个通知页面，告诉用户过一会儿再来访问。另一种用法就是“服务降级”，比如在双十一促销的时候，把订单查询、领积分等不重要的功能入口暂时关闭，保证核心服务能够正常运行。</p>
-</li>
-</ol>
+<h3 id="4-foundation的_nssetintvalueandnotify的内部实现">4. Foundation的_NSSetIntValueAndNotify的内部实现</h3>
+<p>伪代码：</p>
+<pre><code>void _NSSetIntValueAndNotify {
+    // 1. 即将改变value
+    [self willChangeValueForKey];
+    // 2. 父类的setter方法，进行赋值操作
+    [super setAge: age];
+    // 3. value改变完成
+    [self didChangeValueForKey];
+}
+- (void)didChangeValueForKey:(NSString *)key {
+    // 会触发监听器（observer）的监听方法
+    [observer observeValueForKeyPath:ofObject:change:context:]
+}
+</code></pre>
+<p>验证：<br>
+<img src="https://lemonMeow.github.io/post-images/1603815442538.png" alt="" loading="lazy"></p>
+<h2 id="2-kvo本质验证">2. KVO本质验证</h2>
+<h3 id="1-通过打印添加kvo前后属性值变化的方法实现如图">1. 通过打印添加KVO前后属性值变化的方法实现，如图：</h3>
+<figure data-type="image" tabindex="3"><img src="https://lemonMeow.github.io/post-images/1603813600960.png" alt="" loading="lazy"></figure>
+<h3 id="2-nskvonotifying_bxperson-和父类bxperson-中的-setheight实际调用是什么">2. NSKVONotifying_BXPerson 和父类BXPerson 中的 setHeight:()实际调用是什么？</h3>
+<pre><code>NSLog(@&quot;添加监听后 %p %p&quot;,
+      [self.person1 methodForSelector:@selector(setHeight:)],
+      [self.person2 methodForSelector:@selector(setHeight:)]);
+NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld;
+[self.person1 addObserver:self forKeyPath:@&quot;height&quot; options:options context:nil];
+NSLog(@&quot;添加监听后 %p %p&quot;,
+    [self.person1 methodForSelector:@selector(setHeight:)],
+    [self.person2 methodForSelector:@selector(setHeight:)]);
+// 断点调试 （lldb）
+2020-07-11 19:30:20.726930+0800 BX_KVO[8267:420543] 添加监听后 0x1045cad80 0x1045cad80
+2020-07-11 19:30:20.727396+0800 BX_KVO[8267:420543] 添加监听后 0x7fff2564d3a8 0x1045cad80
+(lldb) p (IMP)0x1045cad80
+(IMP) $0 = 0x00000001045cad80 (BX_KVO`-[BXPerson setHeight:] at BXPerson.m:13)
+(lldb) p (IMP)0x7fff2564d3a8
+(IMP) $1 = 0x00007fff2564d3a8 (Foundation`_NSSetDoubleValueAndNotify)
+(lldb) 
+</code></pre>
+<p>// 添加观察者之后的person1的setHeight:()方法地址</p>
+<ul>
+<li><code>p (IMP)0x1045cad80</code><br>
+<code>Foundation_NSSetDoubleValueAndNotify</code></li>
+</ul>
+<p>// 未添加观察者的person的setHeight:() 的方法地址</p>
+<ul>
+<li><code>p (IMP)0x7fff2564d3a8</code><br>
+<code>-(void)setHeight(double)height</code>;</li>
+</ul>
+<h2 id="3-nskvonotifying_bxperson子类的内部方法">3. NSKVONotifying_BXPerson子类的内部方法</h2>
+<pre><code>// 1. 通过runtime获取类对象的方法列表
+- (void)printMethodNameOfClass:(Class)clazz {
+    unsigned int count;
+    // 获取方法数组
+    Method *methodList = class_copyMethodList(clazz, &amp;count);
+    NSMutableString *mutableString = [NSMutableString string];
+    // 遍历所有的方法
+    for (int i = 0; i &lt; count; i++) {
+        // 获得方法
+        Method method = methodList[i];
+        // 获得方法名
+        NSString *methodString = NSStringFromSelector(method_getName(method));
+        // 拼接方法名
+        [mutableString appendString:methodString];
+        [mutableString appendString:@&quot;， &quot;];
+    }
+    // class_copyMethodList，class_createMethodList 初始化需要释放
+    free(methodList);
+    NSLog(@&quot;%@&quot;, mutableString);
+}
+// 调用
+- (void)viewDidLoad {
+    [self printMethodNameOfClass:object_getClass(self.person1)];
+    [self printMethodNameOfClass:object_getClass(self.person2)];
+}
+</code></pre>
+<p>// 动态生成的子类里方法列表打印结果<br>
+<img src="https://lemonMeow.github.io/post-images/1603816085197.png" alt="" loading="lazy"></p>
+<h1 id="二-如何手动实现一个kvo">二. 如何手动实现一个KVO</h1>
+<pre><code>[self.person1 willChangeValueForKey:@&quot;age&quot;];
+ [self.person1 didChangeValueForKey:@&quot;age&quot;];
+</code></pre>
+<h1 id="三-如果修改了成员变量会触发kvo吗">三. 如果修改了成员变量会触发KVO吗？</h1>
+<p>不会触发KVO，KVO的 本质首先要触发set方法，并且调用willChangeValueForKey &amp; didChangeValueForKey才是KVO的本质和实现流程，结合1和2问题。</p>
+<h1 id="扩展">扩展</h1>
+<p>如何知道添加监听之后的instance的isa指向的是什么？<br>
+断点调试：<code>(_lldb)&lt;br&gt; p self.person1.isa ==&gt; NSKVONotifying_BXPerson</code></p>
+<h1 id="foundation框架探索简单逆向待更新">Foundation框架探索(简单逆向，待更新)</h1>
+<p>工具: IFunBox<br>
+反编译工具：Hopper</p>
+<h1 id="kvc">KVC</h1>
+<h2 id="1-直接修改成员变量会触发kvo吗">1. 直接修改成员变量会触发KVO吗？</h2>
+<p>A:不会触发KVO；<br>
+解析：self.person-&gt;age = 10; // 访问成员变量的方式<br>
+根据KVO底层调用回答，其中最根本是需要触发didChangeValueForKey方法才会触发observer调用方法。</p>
+<h2 id="2-通过kvc修改属性值成员变量会触发kvo吗">2. 通过KVC修改属性值/成员变量会触发KVO吗？</h2>
+<p>A:一定会触发<br>
+解析：KVC赋值过程，其中在赋值过程中KVC会触发<code>willChangeValueForKey</code> &amp; <code>didChangeValueForKey</code>,所以会触发KVO</p>
+<h2 id="3-kvc-setvaluel-forkey-setvalueforkeypath过程">3. KVC -  setValueL: forKey: (setValue:forKeyPath:)过程</h2>
+<figure data-type="image" tabindex="4"><img src="https://lemonMeow.github.io/post-images/1603900110373.png" alt="" loading="lazy"></figure>
+<h2 id="4-kvc-valueforkey-valueforkeypath过程">4. KVC - value:forKey (value:forKeyPath:)过程</h2>
+<figure data-type="image" tabindex="5"><img src="https://lemonMeow.github.io/post-images/1603900117139.png" alt="" loading="lazy"></figure>
+<h2 id="5-accessinstancevariablesdirectly方法的默认返回值是yes">5. accessInstanceVariablesDirectly方法的默认返回值是YES</h2>
+<p>是否允许直接访问成员变量</p>
 
           <div class="toc-container"><ul class="markdownIt-TOC">
-<li>
+<li><a href="#kvo">KVO</a></li>
+<li><a href="#%E4%B8%80-kvo-%E7%9A%84%E5%AE%9E%E8%B4%A8">一. KVO 的实质</a>
 <ul>
-<li><a href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%9A%84%E8%BF%87%E7%A8%8B">重定向的过程</a></li>
-<li><a href="#%E9%87%8D%E5%AE%9A%E5%90%91%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF">重定向的应用场景</a></li>
+<li><a href="#1-ios%E7%94%A8%E4%BB%80%E4%B9%88%E6%96%B9%E5%BC%8F%E5%AE%9E%E7%8E%B0%E5%AF%B9%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E7%9A%84kvokvo%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%98%AF%E4%BB%80%E4%B9%88">1. iOS用什么方式实现对一个对象的KVO？(KVO的本质是什么？)</a>
+<ul>
+<li><a href="#1-%E6%9C%AA%E4%BD%BF%E7%94%A8kvo%E7%9B%91%E5%90%AC%E7%9A%84%E5%AF%B9%E8%B1%A1">1. 未使用KVO监听的对象</a></li>
+<li><a href="#2-%E4%BD%BF%E7%94%A8%E4%BA%86kvo%E7%9B%91%E5%90%AC%E7%9A%84%E5%AF%B9%E8%B1%A1">2. 使用了KVO监听的对象</a></li>
+<li><a href="#3-%E6%9C%AC%E8%B4%A8%E8%A7%A3%E6%9E%90">3. 本质解析</a></li>
+<li><a href="#4-foundation%E7%9A%84_nssetintvalueandnotify%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0">4. Foundation的_NSSetIntValueAndNotify的内部实现</a></li>
+</ul>
+</li>
+<li><a href="#2-kvo%E6%9C%AC%E8%B4%A8%E9%AA%8C%E8%AF%81">2. KVO本质验证</a>
+<ul>
+<li><a href="#1-%E9%80%9A%E8%BF%87%E6%89%93%E5%8D%B0%E6%B7%BB%E5%8A%A0kvo%E5%89%8D%E5%90%8E%E5%B1%9E%E6%80%A7%E5%80%BC%E5%8F%98%E5%8C%96%E7%9A%84%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%A6%82%E5%9B%BE">1. 通过打印添加KVO前后属性值变化的方法实现，如图：</a></li>
+<li><a href="#2-nskvonotifying_bxperson-%E5%92%8C%E7%88%B6%E7%B1%BBbxperson-%E4%B8%AD%E7%9A%84-setheight%E5%AE%9E%E9%99%85%E8%B0%83%E7%94%A8%E6%98%AF%E4%BB%80%E4%B9%88">2. NSKVONotifying_BXPerson 和父类BXPerson 中的 setHeight:()实际调用是什么？</a></li>
+</ul>
+</li>
+<li><a href="#3-nskvonotifying_bxperson%E5%AD%90%E7%B1%BB%E7%9A%84%E5%86%85%E9%83%A8%E6%96%B9%E6%B3%95">3. NSKVONotifying_BXPerson子类的内部方法</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E5%A6%82%E4%BD%95%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAkvo">二. 如何手动实现一个KVO</a></li>
+<li><a href="#%E4%B8%89-%E5%A6%82%E6%9E%9C%E4%BF%AE%E6%94%B9%E4%BA%86%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E4%BC%9A%E8%A7%A6%E5%8F%91kvo%E5%90%97">三. 如果修改了成员变量会触发KVO吗？</a></li>
+<li><a href="#%E6%89%A9%E5%B1%95">扩展</a></li>
+<li><a href="#foundation%E6%A1%86%E6%9E%B6%E6%8E%A2%E7%B4%A2%E7%AE%80%E5%8D%95%E9%80%86%E5%90%91%E5%BE%85%E6%9B%B4%E6%96%B0">Foundation框架探索(简单逆向，待更新)</a></li>
+<li><a href="#kvc">KVC</a>
+<ul>
+<li><a href="#1-%E7%9B%B4%E6%8E%A5%E4%BF%AE%E6%94%B9%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E4%BC%9A%E8%A7%A6%E5%8F%91kvo%E5%90%97">1. 直接修改成员变量会触发KVO吗？</a></li>
+<li><a href="#2-%E9%80%9A%E8%BF%87kvc%E4%BF%AE%E6%94%B9%E5%B1%9E%E6%80%A7%E5%80%BC%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E4%BC%9A%E8%A7%A6%E5%8F%91kvo%E5%90%97">2. 通过KVC修改属性值/成员变量会触发KVO吗？</a></li>
+<li><a href="#3-kvc-setvaluel-forkey-setvalueforkeypath%E8%BF%87%E7%A8%8B">3. KVC -  setValueL: forKey: (setValue:forKeyPath:)过程</a></li>
+<li><a href="#4-kvc-valueforkey-valueforkeypath%E8%BF%87%E7%A8%8B">4. KVC - value:forKey (value:forKeyPath:)过程</a></li>
+<li><a href="#5-accessinstancevariablesdirectly%E6%96%B9%E6%B3%95%E7%9A%84%E9%BB%98%E8%AE%A4%E8%BF%94%E5%9B%9E%E5%80%BC%E6%98%AFyes">5. accessInstanceVariablesDirectly方法的默认返回值是YES</a></li>
 </ul>
 </li>
 </ul>
@@ -220,17 +334,17 @@
           
           <hr />
           <p class="next-post">下一篇：
-            <a href="https://lemonMeow.github.io/post/http/">
+            <a href="https://lemonMeow.github.io/post/zhai-chao-yu-lu/">
               <span class="post-title">
-                 HTTP Cookie 机制&rarr;
+                摘抄语录&rarr;
               </span>
             </a>
           </p>
           
           <div class="comment" style="text-align: center;">
             
-            <span id="/post/http-de-chong-ding-xiang-andtiao-zhuan/" class="leancloud_visitors"
-              data-flag-title="HTTP 重定向&amp;跳转">
+            <span id="/post/oc-kvo/" class="leancloud_visitors"
+              data-flag-title="OC-KVO &amp; KVC">
               <em class="post-meta-item-text">阅读量 </em>
               <i class="leancloud-visitors-count">loading...</i>
             </span>

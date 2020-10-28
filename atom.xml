@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://lemonMeow.github.io</id>
     <title>LemonMeow</title>
-    <updated>2020-10-22T16:17:45.618Z</updated>
+    <updated>2020-10-28T15:49:01.093Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://lemonMeow.github.io"/>
     <link rel="self" href="https://lemonMeow.github.io/atom.xml"/>
@@ -10,6 +10,139 @@
     <logo>https://lemonMeow.github.io/images/avatar.png</logo>
     <icon>https://lemonMeow.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, LemonMeow</rights>
+    <entry>
+        <title type="html"><![CDATA[OC-KVO & KVC]]></title>
+        <id>https://lemonMeow.github.io/post/oc-kvo/</id>
+        <link href="https://lemonMeow.github.io/post/oc-kvo/">
+        </link>
+        <updated>2020-10-27T14:41:27.000Z</updated>
+        <summary type="html"><![CDATA[<p>KVO 全称是 key-value Observing，键值监听，可以用于监听某个对象属性值的改变；<br>
+KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性；</p>
+<p>用例代码在文章最后面展示（待更新）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>KVO 全称是 key-value Observing，键值监听，可以用于监听某个对象属性值的改变；<br>
+KVC的全称是Key-Value Coding，俗称“键值编码”，可以通过一个key来访问某个属性；</p>
+<p>用例代码在文章最后面展示（待更新）。</p>
+<!-- more -->
+<br>
+<h1 id="kvo">KVO</h1>
+<h1 id="一-kvo-的实质">一. KVO 的实质</h1>
+<h2 id="1-ios用什么方式实现对一个对象的kvokvo的本质是什么">1. iOS用什么方式实现对一个对象的KVO？(KVO的本质是什么？)</h2>
+<h3 id="1-未使用kvo监听的对象">1. 未使用KVO监听的对象</h3>
+<figure data-type="image" tabindex="1"><img src="https://lemonMeow.github.io/post-images/1603812647145.png" alt="" loading="lazy"></figure>
+<h3 id="2-使用了kvo监听的对象">2. 使用了KVO监听的对象</h3>
+<figure data-type="image" tabindex="2"><img src="https://lemonMeow.github.io/post-images/1603812654208.png" alt="" loading="lazy"></figure>
+<h3 id="3-本质解析">3. 本质解析</h3>
+<ol>
+<li>利用Runtime API动态生成一个子类，（在添加KVO时动态添加了对应的NSKVONotifying_BXPerson类，继承自BXPerson）。</li>
+<li>并且让instance对象的isa指针指向这个NSKVONotifying_BXPerson。</li>
+<li>当修改这个instance对象的属性值时，其内部的setValue:()方法实际的实现是调用Foundation的_NSSetIntValueAndNotify函数。</li>
+</ol>
+<h3 id="4-foundation的_nssetintvalueandnotify的内部实现">4. Foundation的_NSSetIntValueAndNotify的内部实现</h3>
+<p>伪代码：</p>
+<pre><code>void _NSSetIntValueAndNotify {
+    // 1. 即将改变value
+    [self willChangeValueForKey];
+    // 2. 父类的setter方法，进行赋值操作
+    [super setAge: age];
+    // 3. value改变完成
+    [self didChangeValueForKey];
+}
+- (void)didChangeValueForKey:(NSString *)key {
+    // 会触发监听器（observer）的监听方法
+    [observer observeValueForKeyPath:ofObject:change:context:]
+}
+</code></pre>
+<p>验证：<br>
+<img src="https://lemonMeow.github.io/post-images/1603815442538.png" alt="" loading="lazy"></p>
+<h2 id="2-kvo本质验证">2. KVO本质验证</h2>
+<h3 id="1-通过打印添加kvo前后属性值变化的方法实现如图">1. 通过打印添加KVO前后属性值变化的方法实现，如图：</h3>
+<figure data-type="image" tabindex="3"><img src="https://lemonMeow.github.io/post-images/1603813600960.png" alt="" loading="lazy"></figure>
+<h3 id="2-nskvonotifying_bxperson-和父类bxperson-中的-setheight实际调用是什么">2. NSKVONotifying_BXPerson 和父类BXPerson 中的 setHeight:()实际调用是什么？</h3>
+<pre><code>NSLog(@&quot;添加监听后 %p %p&quot;,
+      [self.person1 methodForSelector:@selector(setHeight:)],
+      [self.person2 methodForSelector:@selector(setHeight:)]);
+NSKeyValueObservingOptions options = NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld;
+[self.person1 addObserver:self forKeyPath:@&quot;height&quot; options:options context:nil];
+NSLog(@&quot;添加监听后 %p %p&quot;,
+    [self.person1 methodForSelector:@selector(setHeight:)],
+    [self.person2 methodForSelector:@selector(setHeight:)]);
+// 断点调试 （lldb）
+2020-07-11 19:30:20.726930+0800 BX_KVO[8267:420543] 添加监听后 0x1045cad80 0x1045cad80
+2020-07-11 19:30:20.727396+0800 BX_KVO[8267:420543] 添加监听后 0x7fff2564d3a8 0x1045cad80
+(lldb) p (IMP)0x1045cad80
+(IMP) $0 = 0x00000001045cad80 (BX_KVO`-[BXPerson setHeight:] at BXPerson.m:13)
+(lldb) p (IMP)0x7fff2564d3a8
+(IMP) $1 = 0x00007fff2564d3a8 (Foundation`_NSSetDoubleValueAndNotify)
+(lldb) 
+</code></pre>
+<p>// 添加观察者之后的person1的setHeight:()方法地址</p>
+<ul>
+<li><code>p (IMP)0x1045cad80</code><br>
+<code>Foundation_NSSetDoubleValueAndNotify</code></li>
+</ul>
+<p>// 未添加观察者的person的setHeight:() 的方法地址</p>
+<ul>
+<li><code>p (IMP)0x7fff2564d3a8</code><br>
+<code>-(void)setHeight(double)height</code>;</li>
+</ul>
+<h2 id="3-nskvonotifying_bxperson子类的内部方法">3. NSKVONotifying_BXPerson子类的内部方法</h2>
+<pre><code>// 1. 通过runtime获取类对象的方法列表
+- (void)printMethodNameOfClass:(Class)clazz {
+    unsigned int count;
+    // 获取方法数组
+    Method *methodList = class_copyMethodList(clazz, &amp;count);
+    NSMutableString *mutableString = [NSMutableString string];
+    // 遍历所有的方法
+    for (int i = 0; i &lt; count; i++) {
+        // 获得方法
+        Method method = methodList[i];
+        // 获得方法名
+        NSString *methodString = NSStringFromSelector(method_getName(method));
+        // 拼接方法名
+        [mutableString appendString:methodString];
+        [mutableString appendString:@&quot;， &quot;];
+    }
+    // class_copyMethodList，class_createMethodList 初始化需要释放
+    free(methodList);
+    NSLog(@&quot;%@&quot;, mutableString);
+}
+// 调用
+- (void)viewDidLoad {
+    [self printMethodNameOfClass:object_getClass(self.person1)];
+    [self printMethodNameOfClass:object_getClass(self.person2)];
+}
+</code></pre>
+<p>// 动态生成的子类里方法列表打印结果<br>
+<img src="https://lemonMeow.github.io/post-images/1603816085197.png" alt="" loading="lazy"></p>
+<h1 id="二-如何手动实现一个kvo">二. 如何手动实现一个KVO</h1>
+<pre><code>[self.person1 willChangeValueForKey:@&quot;age&quot;];
+ [self.person1 didChangeValueForKey:@&quot;age&quot;];
+</code></pre>
+<h1 id="三-如果修改了成员变量会触发kvo吗">三. 如果修改了成员变量会触发KVO吗？</h1>
+<p>不会触发KVO，KVO的 本质首先要触发set方法，并且调用willChangeValueForKey &amp; didChangeValueForKey才是KVO的本质和实现流程，结合1和2问题。</p>
+<h1 id="扩展">扩展</h1>
+<p>如何知道添加监听之后的instance的isa指向的是什么？<br>
+断点调试：<code>(_lldb)&lt;br&gt; p self.person1.isa ==&gt; NSKVONotifying_BXPerson</code></p>
+<h1 id="foundation框架探索简单逆向待更新">Foundation框架探索(简单逆向，待更新)</h1>
+<p>工具: IFunBox<br>
+反编译工具：Hopper</p>
+<h1 id="kvc">KVC</h1>
+<h2 id="1-直接修改成员变量会触发kvo吗">1. 直接修改成员变量会触发KVO吗？</h2>
+<p>A:不会触发KVO；<br>
+解析：self.person-&gt;age = 10; // 访问成员变量的方式<br>
+根据KVO底层调用回答，其中最根本是需要触发didChangeValueForKey方法才会触发observer调用方法。</p>
+<h2 id="2-通过kvc修改属性值成员变量会触发kvo吗">2. 通过KVC修改属性值/成员变量会触发KVO吗？</h2>
+<p>A:一定会触发<br>
+解析：KVC赋值过程，其中在赋值过程中KVC会触发<code>willChangeValueForKey</code> &amp; <code>didChangeValueForKey</code>,所以会触发KVO</p>
+<h2 id="3-kvc-setvaluel-forkey-setvalueforkeypath过程">3. KVC -  setValueL: forKey: (setValue:forKeyPath:)过程</h2>
+<figure data-type="image" tabindex="4"><img src="https://lemonMeow.github.io/post-images/1603900110373.png" alt="" loading="lazy"></figure>
+<h2 id="4-kvc-valueforkey-valueforkeypath过程">4. KVC - value:forKey (value:forKeyPath:)过程</h2>
+<figure data-type="image" tabindex="5"><img src="https://lemonMeow.github.io/post-images/1603900117139.png" alt="" loading="lazy"></figure>
+<h2 id="5-accessinstancevariablesdirectly方法的默认返回值是yes">5. accessInstanceVariablesDirectly方法的默认返回值是YES</h2>
+<p>是否允许直接访问成员变量</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[摘抄语录]]></title>
         <id>https://lemonMeow.github.io/post/zhai-chao-yu-lu/</id>
